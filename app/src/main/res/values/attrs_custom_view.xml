@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Drawable">
+        <attr name="drawable_width" format="integer"></attr>
+        <attr name="drawable_height" format="integer"></attr>
+        <attr name="drawable" format="reference"></attr>
+        <attr name="src" format="reference"></attr>
+    </declare-styleable>
+
+</resources>

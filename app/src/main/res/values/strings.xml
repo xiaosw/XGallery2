@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PTGallery</string>
+
+    <string name="str_photo">Photo</string>
+    <string name="str_album">Album</string>
+
+    <string name="str_unauthorized_external_storage">Unauthorized external storage, Application can\'t mormal use</string>
+</resources>

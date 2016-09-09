@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.xiaosw.gallery.viewer.DateLineRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="4dp"
+        android:layout_marginRight="@dimen/padding_right_date_line"
+        android:paddingLeft="@dimen/padding_left_date_line"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

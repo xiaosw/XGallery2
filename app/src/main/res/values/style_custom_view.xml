@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="tab_icon_64">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:button">@null</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@drawable/selector_text_main_header</item>
+        <item name="android:textSize">@dimen/text_size_main_header</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingTop">@dimen/padding_top_main_header_icon</item>
+        <item name="android:paddingBottom">@dimen/padding_bottom_main_header_icon</item>
+    </style>
+
+</resources>

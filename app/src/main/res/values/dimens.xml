@@ -1,0 +1,25 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <!-- 控件尺寸 -->
+    <dimen name="view_height_header">72dp</dimen>
+    <dimen name="view_height_footer">56dp</dimen>
+    <dimen name="view_height_date_line_title">50dp</dimen>
+
+    <!-- 图片尺寸 -->
+    <integer name="drawable_tab_icon_size">64</integer>
+
+    <!-- 字体大小 -->
+    <dimen name="text_size_main_header">13sp</dimen>
+
+
+    <!-- 内边距 -->
+    <dimen name="padding_top_main_header_icon">10dp</dimen>
+    <dimen name="padding_bottom_main_header_icon">12dp</dimen>
+    <dimen name="padding_left_date_line">128dp</dimen>
+    <dimen name="padding_right_date_line">24dp</dimen>
+
+    <!-- 栅格行列 -->
+    <integer name="num_coloum_date_line_land">6</integer>
+    <integer name="num_coloum_date_line_port">5</integer>
+</resources>
