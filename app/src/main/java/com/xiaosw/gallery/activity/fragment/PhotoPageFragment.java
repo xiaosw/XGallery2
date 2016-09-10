@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiaosw.gallery.R;
+import com.xiaosw.gallery.bean.MediaItem;
+import com.xiaosw.gallery.util.GlobalDataStorage;
 import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.util.PTToast;
 import com.xiaosw.gallery.util.ScreenUtil;
@@ -23,6 +26,8 @@ import com.xiaosw.gallery.viewer.divider.DividerVerticalDecoration;
 import com.xiaosw.gallery.widget.adapter.PhotoPageGallerAdapter;
 import com.xiaosw.gallery.widget.adapter.PhotoPageAdapter;
 import com.xiaosw.gallery.widget.listener.OnItemClickListener;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,6 +44,7 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
 		OnItemClickListener, PhotoPageGallerAdapter.OnItemSelectedChangedListener, View.OnTouchListener {
 
 	public static final String KEY_CURRENT_INDEX = "CURRENT_INDEX";
+	public static final String KEY_BUCKET_ID = "BUCKET_ID";
 
 	@Bind(R.id.view_pager_photo_page)
 	SupportViewPager mViewPager;
@@ -58,6 +64,8 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
 
 	/** 当前现实图片的下标 */
 	private int mCurrentIndex;
+	/** 过滤条件 */
+	private String mFilterWhere;
 	/** 单张图片 */
 	private PhotoPageAdapter mPageAdapter;
 	/** 底部gallery */
@@ -69,12 +77,24 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_photo_page, null);
 		mCurrentIndex = getArguments().getInt(KEY_CURRENT_INDEX, 0);
+		mFilterWhere = getArguments().getString(KEY_BUCKET_ID);
 		ButterKnife.bind(this, mRootView);
 
 		// RecyclerView
 		mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 		mRecyclerView.setLayoutManager(mLayoutManager);
-		mPageGalleryAdapter = new PhotoPageGallerAdapter(getContext(), this);
+		ArrayList<MediaItem> mediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
+		ArrayList<MediaItem> mData = new ArrayList<>();
+		if (!TextUtils.isEmpty(mFilterWhere)) {
+			for (MediaItem mediaItem : mediaItems) {
+				if (mFilterWhere.equals(mediaItem.getBucketId())) {
+					mData.add(mediaItem);
+				}
+			}
+		} else {
+			mData.addAll(mediaItems);
+		}
+		mPageGalleryAdapter = new PhotoPageGallerAdapter(getContext(), mData, this);
 		mRecyclerView.setAdapter(mPageGalleryAdapter);
 		mRecyclerView.setOnTouchListener(this);
 		mPageGalleryAdapter.setOnItemClickListener(this);
@@ -108,7 +128,7 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
 		});
 
 		// ViewPager
-		mPageAdapter = new PhotoPageAdapter(getContext());
+		mPageAdapter = new PhotoPageAdapter(getContext(), mData);
 		mViewPager.setAdapter(mPageAdapter);
 		mViewPager.setOnTouchListener(this);
 		mViewPager.addOnPageChangeListener(this);

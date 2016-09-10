@@ -31,11 +31,11 @@ public class PhotoPageAdapter extends PagerAdapter {
     private ViewRecyler<ImageView> mViewRecyler;
     private RequestManager mRequestManager;
 
-    public PhotoPageAdapter(Context context) {
+    public PhotoPageAdapter(Context context, ArrayList<MediaItem> mediaItems) {
         this.mContext = context;
         this.mRequestManager = Glide.with(mContext);
         mViewRecyler = new ViewRecyler<ImageView>(3);
-        mMediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
+        mMediaItems = mediaItems;
         Glide.with(mContext);
     }
 

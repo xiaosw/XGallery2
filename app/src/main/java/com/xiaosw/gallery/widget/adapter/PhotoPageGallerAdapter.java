@@ -41,14 +41,11 @@ public class PhotoPageGallerAdapter extends RecyclerView.Adapter<PhotoPageGaller
 	private RequestManager mRequestManager;
 	private RecyclerView mRecyclerView;
 	private OnItemSelectedChangedListener mOnItemSelectedChangedListener;
-	public PhotoPageGallerAdapter(Context context) {
-		this(context, null);
-	}
 
-	public PhotoPageGallerAdapter(Context context, OnItemSelectedChangedListener listener) {
+	public PhotoPageGallerAdapter(Context context, ArrayList<MediaItem> mediaItems, OnItemSelectedChangedListener listener) {
 		this.mContext = context.getApplicationContext();
 		this.mRequestManager = Glide.with(mContext);
-		mMediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
+		mMediaItems = mediaItems;
 		this.mOnItemSelectedChangedListener = listener;
 	}
 
