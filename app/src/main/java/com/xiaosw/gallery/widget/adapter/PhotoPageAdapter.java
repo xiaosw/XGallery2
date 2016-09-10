@@ -34,7 +34,7 @@ public class PhotoPageAdapter extends PagerAdapter {
     public PhotoPageAdapter(Context context) {
         this.mContext = context;
         this.mRequestManager = Glide.with(mContext);
-        mViewRecyler = new ViewRecyler<ImageView>(5);
+        mViewRecyler = new ViewRecyler<ImageView>(3);
         mMediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
         Glide.with(mContext);
     }

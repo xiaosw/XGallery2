@@ -22,6 +22,7 @@
     <dimen name="padding_bottom_main_header_icon">12dp</dimen>
     <dimen name="padding_left_date_line">128dp</dimen>
     <dimen name="padding_right_date_line">24dp</dimen>
+    <dimen name="padding_photo_prev_gallery">2dp</dimen>
 
     <!-- 栅格行列 -->
     <integer name="num_coloum_date_line_land">6</integer>

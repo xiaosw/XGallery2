@@ -7,6 +7,7 @@
     <color name="clr_white_100">#FFFFFF</color>
     <color name="clr_black_100">#000000</color>
     <color name="clr_gray_100">#CCCCCC</color>
+    <color name="clr_green_100">#00FF00</color>
     <color name="clr_windown_background">#F6F6F6</color>
     <color name="clr_main_head_bar_text_default">#747474</color>
 

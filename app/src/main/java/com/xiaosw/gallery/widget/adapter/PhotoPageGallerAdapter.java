@@ -3,6 +3,7 @@ package com.xiaosw.gallery.widget.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.config.AppConfig;
 import com.xiaosw.gallery.util.GlobalDataStorage;
+import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.util.ScreenUtil;
 import com.xiaosw.gallery.widget.listener.OnItemClickListener;
 import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
@@ -38,10 +40,16 @@ public class PhotoPageGallerAdapter extends RecyclerView.Adapter<PhotoPageGaller
 	private ArrayList<MediaItem> mMediaItems;
 	private RequestManager mRequestManager;
 	private RecyclerView mRecyclerView;
+	private OnItemSelectedChangedListener mOnItemSelectedChangedListener;
 	public PhotoPageGallerAdapter(Context context) {
+		this(context, null);
+	}
+
+	public PhotoPageGallerAdapter(Context context, OnItemSelectedChangedListener listener) {
 		this.mContext = context.getApplicationContext();
 		this.mRequestManager = Glide.with(mContext);
 		mMediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
+		this.mOnItemSelectedChangedListener = listener;
 	}
 
 	@Override
@@ -62,6 +70,11 @@ public class PhotoPageGallerAdapter extends RecyclerView.Adapter<PhotoPageGaller
 					.centerCrop()
 					.into(holder.mPhotoView);
 		}
+		if (mOnItemSelectedChangedListener != null
+				&& mOnItemSelectedChangedListener.getCurrentPosition()  == position) {
+			holder.mItemView.requestFocus();
+		}
+
 	}
 
 	@Override
@@ -96,12 +109,22 @@ public class PhotoPageGallerAdapter extends RecyclerView.Adapter<PhotoPageGaller
 			this.mItemView = itemView;
 			ButterKnife.bind(this, mItemView);
 			ViewGroup.LayoutParams layoutParams = mPhotoView.getLayoutParams();
-			int[] wh = ScreenUtil.getScreenWH(mContext);
 			int size = mContext.getResources().getDimensionPixelSize(R.dimen.view_height_gallery_item);
 			layoutParams.width = (int) (size * 0.8f);
 			layoutParams.height = size;
 			mPhotoView.setLayoutParams(layoutParams);
 			mItemView.setOnClickListener(this);
+			mItemView.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					switch (event.getAction()) {
+						case MotionEvent.ACTION_UP:
+							onClick(v);
+							break;
+					}
+					return false;
+				}
+			});
 		}
 
 		@Override
@@ -120,6 +143,10 @@ public class PhotoPageGallerAdapter extends RecyclerView.Adapter<PhotoPageGaller
 			}
 			return false;
 		}
+	}
+
+	public interface OnItemSelectedChangedListener {
+		public int getCurrentPosition();
 	}
 
 }
