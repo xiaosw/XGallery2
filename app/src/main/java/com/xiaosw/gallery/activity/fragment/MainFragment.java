@@ -17,6 +17,7 @@ import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * @ClassName : {@link MainFragment}
@@ -102,6 +103,7 @@ public class MainFragment extends BaseFragment {
 	 * 头部切换事件
 	 * @param view
 	 */
+	@OnClick({R.id.cb_album_tab, R.id.cb_date_line_tab})
 	public void onSwitchTab(View view) {
 		switch (view.getId()) {
 			case R.id.cb_date_line_tab:

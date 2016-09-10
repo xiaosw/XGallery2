@@ -14,7 +14,6 @@ import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.config.AppConfig;
 import com.xiaosw.gallery.util.GlobalDataStorage;
-import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.util.ScreenUtil;
 import com.xiaosw.gallery.widget.listener.OnItemClickListener;
 import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
@@ -25,20 +24,21 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * @ClassName : {@link PhotoAdapter}
+ * @ClassName : {@link PhotoPageGallerAdapter}
  * @Description : 照片预览
  *
  * @Author xiaosw<xiaoshiwang@putao.com>
  * @Date 2016-09-09 22:22:15
  */
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> implements BaseRecyclerAdapter<MediaItem> {
+public class PhotoPageGallerAdapter extends RecyclerView.Adapter<PhotoPageGallerAdapter.PhotoViewHolder> implements BaseRecyclerAdapter<MediaItem> {
 
 	private Context mContext;
 	private OnItemClickListener mOnItemClickListener;
 	private OnItemLongClickListener mOnItemLongClickListener;
 	private ArrayList<MediaItem> mMediaItems;
 	private RequestManager mRequestManager;
-	public PhotoAdapter(Context context) {
+	private RecyclerView mRecyclerView;
+	public PhotoPageGallerAdapter(Context context) {
 		this.mContext = context.getApplicationContext();
 		this.mRequestManager = Glide.with(mContext);
 		mMediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
@@ -46,17 +46,19 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
 	@Override
 	public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		mRecyclerView = (RecyclerView) parent;
 		return new PhotoViewHolder(View.inflate(mContext, R.layout.item_photo_preview, null));
 	}
 
 	@Override
 	public void onBindViewHolder(PhotoViewHolder holder, int position) {
+		holder.mPhotoView.setImageDrawable(null);
 		MediaItem mediaItem = mMediaItems.get(position);
 		String filePath = mediaItem.getData();
 		if (!TextUtils.isEmpty(filePath)) {
 			mRequestManager.load(AppConfig.GLIDE_NATIVE_PREFIX.concat(mediaItem.getData()))
 					.priority(Priority.HIGH)
-					.override(holder.mPhotoView.getLayoutParams().width, holder.mPhotoView.getLayoutParams().height)
+					.override(holder.mPhotoView.getLayoutParams().width, mRecyclerView.getMeasuredHeight())
 					.centerCrop()
 					.into(holder.mPhotoView);
 		}
@@ -95,8 +97,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 			ButterKnife.bind(this, mItemView);
 			ViewGroup.LayoutParams layoutParams = mPhotoView.getLayoutParams();
 			int[] wh = ScreenUtil.getScreenWH(mContext);
-			layoutParams.width = wh[0];
-			layoutParams.height = wh[1];
+			int size = mContext.getResources().getDimensionPixelSize(R.dimen.view_height_gallery_item);
+			layoutParams.width = (int) (size * 0.8f);
+			layoutParams.height = size;
 			mPhotoView.setLayoutParams(layoutParams);
 			mItemView.setOnClickListener(this);
 		}

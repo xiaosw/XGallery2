@@ -6,16 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.util.GlobalDataStorage;
-import com.xiaosw.gallery.util.PTToast;
 import com.xiaosw.gallery.viewer.DateLineRecyclerView;
 import com.xiaosw.gallery.viewer.divider.DividerGridItemDecoration;
 import com.xiaosw.gallery.widget.adapter.DateLineAdapter;
-import com.xiaosw.gallery.widget.adapter.PhotoAdapter;
 import com.xiaosw.gallery.widget.listener.OnItemClickListener;
 import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
 
@@ -63,13 +60,13 @@ public class DateLineFragment extends MediaDataObserverFragment implements OnIte
 			return;
 		}
 		int realPosition = GlobalDataStorage.INSTANCE.getRealPositionByMediaItem(mediaItem);
-		PhotoFragment photoFragment = new PhotoFragment();
+		PhotoPageFragment photoFragment = new PhotoPageFragment();
 		Bundle args = new Bundle();
-		args.putInt(PhotoFragment.KEY_CURRENT_INDEX, realPosition);
+		args.putInt(PhotoPageFragment.KEY_CURRENT_INDEX, realPosition);
 		photoFragment.setArguments(args);
 		mActivity.getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.content, photoFragment, PhotoFragment.class.getSimpleName())
+				.replace(R.id.content, photoFragment, PhotoPageFragment.class.getSimpleName())
 				.addToBackStack(null)
 				.commit();
 	}

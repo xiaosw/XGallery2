@@ -5,12 +5,16 @@
     <dimen name="view_height_header">72dp</dimen>
     <dimen name="view_height_footer">56dp</dimen>
     <dimen name="view_height_date_line_title">50dp</dimen>
+    <dimen name="view_height_gallery_item">100dp</dimen>
+    <dimen name="view_height_icon">64dp</dimen>
+    <dimen name="view_height_icon_padding">16dp</dimen>
 
     <!-- 图片尺寸 -->
     <integer name="drawable_tab_icon_size">64</integer>
 
     <!-- 字体大小 -->
     <dimen name="text_size_main_header">13sp</dimen>
+    <dimen name="text_size_header_title">18sp</dimen>
 
 
     <!-- 内边距 -->

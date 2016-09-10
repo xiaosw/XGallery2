@@ -82,7 +82,6 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
 		getSupportFragmentManager()
 				.beginTransaction()
 				.add(R.id.content, new MainFragment(), MainFragment.class.getSimpleName())
-				.addToBackStack(null)
 				.commit();
 	}
 

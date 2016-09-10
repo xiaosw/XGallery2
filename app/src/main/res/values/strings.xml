@@ -4,5 +4,14 @@
     <string name="str_photo">Photo</string>
     <string name="str_album">Album</string>
 
+    <!-- 字体 -->
+    <string name="font_family_black">sans-serif-black</string>
+    <string name="font_family_medium">sans-serif-medium</string>
+    <string name="font_family_bold">sans-serif-bold</string>
+
+    <!-- permission -->
     <string name="str_unauthorized_external_storage">Unauthorized external storage, Application can\'t mormal use</string>
+
+    <!-- photo preview -->
+    <string name="str_photo_perview_header_function">Edit</string>
 </resources>

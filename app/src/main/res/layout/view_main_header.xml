@@ -19,8 +19,7 @@
         xiaosw:drawable_width="@integer/drawable_tab_icon_size"
         xiaosw:drawable_height="@integer/drawable_tab_icon_size"
         android:textColor="@drawable/selector_text_main_header"
-        android:checked="true"
-        android:onClick="onSwitchTab" />
+        android:checked="true" />
 
     <View
         android:layout_width="0dp"
@@ -33,8 +32,7 @@
         android:drawableTop="@drawable/selector_drawable_main_album_tab"
         android:text="@string/str_album"
         xiaosw:drawable_width="@integer/drawable_tab_icon_size"
-        xiaosw:drawable_height="@integer/drawable_tab_icon_size"
-        android:onClick="onSwitchTab" />
+        xiaosw:drawable_height="@integer/drawable_tab_icon_size" />
 
     <View
         android:layout_width="0dp"
