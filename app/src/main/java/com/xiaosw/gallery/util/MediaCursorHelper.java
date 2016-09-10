@@ -1,11 +1,17 @@
 package com.xiaosw.gallery.util;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.xiaosw.gallery.R;
+import com.xiaosw.gallery.bean.MediaFolder;
 import com.xiaosw.gallery.bean.MediaItem;
+import com.xiaosw.gallery.config.AppConfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * @ClassName : {@link MediaCursorHelper}
@@ -78,4 +84,51 @@ public class MediaCursorHelper {
 		mediaItem.setBucketDisplayName(cursor.getString(INDEX_BUCKET_DISPLAY_NAME));
 		return mediaItem;
 	}
+
+	/**
+	 * 解析图片数据
+	 * @param cursor
+	 */
+	public static void parseFolderCursor(Context context, Cursor cursor) {
+		ArrayList<MediaFolder> temp = new ArrayList<MediaFolder>();
+		if (null != cursor && cursor.getCount() > 0) {
+			while (cursor.moveToNext()) {
+				temp.add(getMediaFolderByCursor(context, cursor));
+			}
+		}
+		GlobalDataStorage.INSTANCE.replaceAllMediaFolders(temp);
+	}
+
+	private static MediaFolder getMediaFolderByCursor(Context context, Cursor cursor) {
+		MediaFolder mediaFolder = new MediaFolder();
+		mediaFolder.setCoverPath(cursor.getString(0));
+		String folderName = cursor.getString(1);
+		mediaFolder.setFolderName(getNativeFolderName(context, folderName));
+		mediaFolder.setBucketId(cursor.getString(2));
+		mediaFolder.setTotalSize(cursor.getInt(3));
+		boolean isMainFolder = AppConfig.MAIN_MEDIA_FOLDER.containsKey(folderName);
+		if (isMainFolder) {
+			mediaFolder.setFolderPosition(AppConfig.MAIN_MEDIA_FOLDER.get(folderName));
+		} else {
+			mediaFolder.setFolderPosition(Integer.parseInt(mediaFolder.getBucketId()));
+		}
+		mediaFolder.setOther(!isMainFolder);
+		return mediaFolder;
+	}
+
+	private static String getNativeFolderName(Context context, String folderName) {
+		if ("Camera".equals(folderName)) {
+			return context.getString(R.string.str_folder_name_camera);
+		} else if ("Video".equals(folderName)) {
+			return context.getString(R.string.str_folder_name_video);
+		} else if ("Screenshots".equals(folderName)) {
+			return context.getString(R.string.str_folder_name_screenshots);
+		} else if ("Download".equals(folderName)
+				|| "download".equals(folderName)) {
+			return context.getString(R.string.str_folder_name_download);
+		}
+
+		return folderName;
+	}
+
 }

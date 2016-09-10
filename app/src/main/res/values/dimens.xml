@@ -23,8 +23,16 @@
     <dimen name="padding_left_date_line">128dp</dimen>
     <dimen name="padding_right_date_line">24dp</dimen>
     <dimen name="padding_photo_prev_gallery">2dp</dimen>
+    <dimen name="horizontal_spacing_album">40dp</dimen>
+    <dimen name="vertical_spacing_album">30dp</dimen>
 
     <!-- 栅格行列 -->
+    <!-- 时间轴 -->
     <integer name="num_coloum_date_line_land">6</integer>
     <integer name="num_coloum_date_line_port">5</integer>
+
+    <!-- 文件夹 -->
+    <integer name="num_coloum_album_land">4</integer>
+    <integer name="num_coloum_album_port">3</integer>
+
 </resources>

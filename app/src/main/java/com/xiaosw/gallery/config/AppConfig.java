@@ -1,5 +1,8 @@
 package com.xiaosw.gallery.config;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 /**
  * @ClassName : {@link AppConfig}
  * @Description :
@@ -21,6 +24,16 @@ public class AppConfig {
 
 	/** 按钮仿重复点击间隔时间 */
 	public static final int DURATION_CLICK_GAP = 320;
+
+	/** 主目录（用于区分其它） */
+	public static final HashMap<String, Integer> MAIN_MEDIA_FOLDER = new HashMap<String, Integer>();
+	static {
+		MAIN_MEDIA_FOLDER.put("Camera", 0);
+		MAIN_MEDIA_FOLDER.put("Video", 1);
+		MAIN_MEDIA_FOLDER.put("Screenshots", 2);
+		MAIN_MEDIA_FOLDER.put("Download", 3);
+		MAIN_MEDIA_FOLDER.put("download", 4);
+	}
 
 
 	///////////////////////////////////////////////////////////////////////////

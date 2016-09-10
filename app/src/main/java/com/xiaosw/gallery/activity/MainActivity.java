@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.activity.fragment.MainFragment;
+import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.util.MPermissionCompat;
 import com.xiaosw.gallery.util.MediaCursorHelper;
 import com.xiaosw.gallery.util.PTToast;
@@ -105,6 +106,17 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		LogUtil.e("-------------> onLoadFinished()");
+		Cursor fodlerCursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+				new String[] {MediaStore.Images.ImageColumns.DATA,
+						MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+						MediaStore.Images.ImageColumns.BUCKET_ID,
+						"COUNT (".concat(MediaStore.Images.ImageColumns._ID).concat(") as totalSize ")},
+				"1 == 1 ) GROUP BY ( ".concat(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME),
+				null,
+				MediaStore.Images.ImageColumns.DATE_TAKEN.concat(" DESC"));
+		MediaCursorHelper.parseFolderCursor(this, fodlerCursor);
+
 		MediaCursorHelper.parseImageCursor(cursor);
 	}
 

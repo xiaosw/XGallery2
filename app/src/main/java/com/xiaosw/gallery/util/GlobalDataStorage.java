@@ -1,8 +1,15 @@
 package com.xiaosw.gallery.util;
 
+import android.content.Context;
+
+import com.xiaosw.gallery.GalleryApplication;
+import com.xiaosw.gallery.R;
+import com.xiaosw.gallery.bean.MediaFolder;
 import com.xiaosw.gallery.bean.MediaItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 
 /**
@@ -14,6 +21,10 @@ import java.util.HashSet;
  */
 public enum  GlobalDataStorage {
 	INSTANCE;
+
+	///////////////////////////////////////////////////////////////////////////
+	// 文件相关
+	///////////////////////////////////////////////////////////////////////////
 	/** 数据库查询的原始数据 */
 	private ArrayList<MediaItem> mSrcMediaItems = new ArrayList<>();
 	/** 处理过后的数据库数据 size >= {@link #mSrcMediaItems} */
@@ -68,8 +79,8 @@ public enum  GlobalDataStorage {
 	 */
 	private void handleBreakLine(ArrayList<MediaItem> mediaItems, int numColumns) {
 		MediaItem lastMediaItem = null;
-		if (mediaItems == null || mediaItems.size() == 0) {
-			return;
+		if (mediaItems == null) {
+			mediaItems = new ArrayList<>();
 		}
 		mHandleMediaItems.clear();
 		int titleLineCount = 0;
@@ -91,6 +102,7 @@ public enum  GlobalDataStorage {
 			lastMediaItem = mediaItem;
 		}
 		lastMediaItem = null;
+		notifyMediaDataChange();
 	}
 
 	/**
@@ -121,8 +133,43 @@ public enum  GlobalDataStorage {
 		}
 	}
 
-	public interface MediaDataChangeObserver {
-		public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData);
+	public interface MediaDataChangeObserver<T> {
+		public void notifyChange(ArrayList<T> srcData, ArrayList<T> handleData);
+	}
+
+
+	///////////////////////////////////////////////////////////////////////////
+	// 目录信息
+	///////////////////////////////////////////////////////////////////////////
+	private ArrayList<MediaFolder> mMediaFolders = new ArrayList<>();
+	public void replaceAllMediaFolders(ArrayList<MediaFolder> mediaFolders) {
+		if (null == mediaFolders) {
+			throw new NullPointerException("newMediaItems must not null!!!");
+		}
+		mMediaFolders.clear();
+		mMediaFolders.addAll(mediaFolders);
+		Collections.sort(mMediaFolders, new Comparator<MediaFolder>() {
+			@Override
+			public int compare(MediaFolder lhs, MediaFolder rhs) {
+				return lhs.getFolderPosition() < rhs.getFolderPosition() ? -1 : (lhs == rhs ? 0 : 1);
+			}
+		});
+		mMediaFolders.add(getOtherMediaFolder());
+	}
+
+	public ArrayList<MediaFolder> getMediaFolders() {
+		return mMediaFolders;
+	}
+
+	private MediaFolder mOtherFolder;
+	private MediaFolder getOtherMediaFolder() {
+		if (null == mOtherFolder) {
+			mOtherFolder = new MediaFolder();
+			mOtherFolder.setOther(true);
+			mOtherFolder.setFolderPosition(Integer.MAX_VALUE);
+			mOtherFolder.setFolderName(GalleryApplication.mApp.getString(R.string.str_folder_name_other));
+		}
+		return mOtherFolder;
 	}
 
 }

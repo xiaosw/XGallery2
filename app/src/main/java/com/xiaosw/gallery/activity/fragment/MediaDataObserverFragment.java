@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
+import com.xiaosw.gallery.util.LogUtil;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,9 @@ import java.util.ArrayList;
  * @Author xiaosw<xiaoshiwang@putao.com>
  * @Date 2016-09-09 11:11:51
  */
-public class MediaDataObserverFragment extends BaseFragment implements GlobalDataStorage.MediaDataChangeObserver {
+public class MediaDataObserverFragment<T> extends BaseFragment implements GlobalDataStorage.MediaDataChangeObserver<T> {
+
+	boolean needRefresh;
 
 	@Nullable
 	@Override
@@ -37,7 +40,7 @@ public class MediaDataObserverFragment extends BaseFragment implements GlobalDat
 	}
 
 	@Override
-	public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
+	public void notifyChange(ArrayList<T> srcData, ArrayList<T> handleData) {
 
 	}
 }

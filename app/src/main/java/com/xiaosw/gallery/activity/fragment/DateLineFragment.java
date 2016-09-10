@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.util.GlobalDataStorage;
+import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.viewer.DateLineRecyclerView;
 import com.xiaosw.gallery.viewer.divider.DividerGridItemDecoration;
 import com.xiaosw.gallery.widget.adapter.DateLineAdapter;
@@ -28,8 +29,11 @@ import butterknife.ButterKnife;
  * @Author xiaosw<xiaoshiwang@putao.com>
  * @Date 2016-09-09 11:11:51
  */
-public class DateLineFragment extends MediaDataObserverFragment implements OnItemClickListener,
+public class DateLineFragment extends MediaDataObserverFragment<MediaItem> implements OnItemClickListener,
 		OnItemLongClickListener {
+
+	private String TAG = "DateLineFragment";
+
 	@Bind(R.id.recycler_view)
 	DateLineRecyclerView mRecyclerView;
 	private RecyclerView.Adapter mAdapter;
@@ -37,10 +41,20 @@ public class DateLineFragment extends MediaDataObserverFragment implements OnIte
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
 		mRootView = inflater.inflate(R.layout.fragment_date_line_page, null);
 		ButterKnife.bind(this, mRootView);
 		initRecyclerView();
 		return mRootView;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (needRefresh) {
+			mAdapter.notifyDataSetChanged();
+			needRefresh = false;
+		}
 	}
 
 	private void initRecyclerView() {
@@ -78,7 +92,12 @@ public class DateLineFragment extends MediaDataObserverFragment implements OnIte
 
 	@Override
 	public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
-		super.notifyChange(srcData, handleData);
-		mAdapter.notifyDataSetChanged();
+		LogUtil.e(TAG, "notifyChange----------> isVisible = " + isVisible());
+		if (isVisible()) {
+			mAdapter.notifyDataSetChanged();
+		} else {
+			needRefresh = true;
+		}
+
 	}
 }

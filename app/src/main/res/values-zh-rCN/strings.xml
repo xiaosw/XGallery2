@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">相册</string>
+
+    <string name="str_photo">时间轴</string>
+    <string name="str_album">相册</string>
+
+    <!-- permission -->
+    <string name="str_unauthorized_external_storage">未开启存储空间权限，不能正常使用相册</string>
+
+    <!-- photo preview -->
+    <string name="str_photo_perview_header_function">编辑</string>
+
+    <!-- media fodler -->
+    <string name="str_folder_name_camera">相机</string>
+    <string name="str_folder_name_video">视频</string>
+    <string name="str_folder_name_screenshots">截屏</string>
+    <string name="str_folder_name_download">下载</string>
+    <string name="str_folder_name_other">其他</string>
+</resources>
