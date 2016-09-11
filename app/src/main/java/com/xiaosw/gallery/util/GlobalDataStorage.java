@@ -165,7 +165,7 @@ public enum  GlobalDataStorage {
 	private MediaFolder getOtherMediaFolder() {
 		if (null == mOtherFolder) {
 			mOtherFolder = new MediaFolder();
-			mOtherFolder.setOther(true);
+			mOtherFolder.setOther(false); // 需要在主界面现实，所以为false
 			mOtherFolder.setFolderPosition(Integer.MAX_VALUE);
 			mOtherFolder.setFolderName(GalleryApplication.mApp.getString(R.string.str_folder_name_other));
 		}

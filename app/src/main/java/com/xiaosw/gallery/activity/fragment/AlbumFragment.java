@@ -1,14 +1,10 @@
 package com.xiaosw.gallery.activity.fragment;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.util.SortedList;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +12,13 @@ import android.widget.AdapterView;
 
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaFolder;
-import com.xiaosw.gallery.bean.MediaItem;
-import com.xiaosw.gallery.config.AppConfig;
 import com.xiaosw.gallery.util.GlobalDataStorage;
 import com.xiaosw.gallery.util.LogUtil;
-import com.xiaosw.gallery.util.MediaCursorHelper;
 import com.xiaosw.gallery.viewer.SupportGridView;
 import com.xiaosw.gallery.widget.adapter.AlbumFolderAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,10 +37,12 @@ public class AlbumFragment extends MediaDataObserverFragment<MediaFolder> implem
 	SupportGridView mGridView;
 
 	private AlbumFolderAdapter mAlbumFolderAdapter;
+	private ArrayList<MediaFolder> mMediaFolders;
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
+		mMediaFolders = new ArrayList<>();
 	}
 
 	@Nullable
@@ -60,9 +52,23 @@ public class AlbumFragment extends MediaDataObserverFragment<MediaFolder> implem
 		mRootView = inflater.inflate(R.layout.fragment_album_page, null);
 		ButterKnife.bind(this, mRootView);
 		mGridView.setOnItemClickListener(this);
-		mAlbumFolderAdapter = new AlbumFolderAdapter(getContext(), mGridView);
+		ArrayList<MediaFolder> mediaFolders = GlobalDataStorage.INSTANCE.getMediaFolders();
+		initMediaFolders(mediaFolders);
+		LogUtil.e("mainMediaFolders-----------> " + mMediaFolders.size() + ", mediaFolders = " + mediaFolders.size());
+		mAlbumFolderAdapter = new AlbumFolderAdapter(getContext(), mMediaFolders, mGridView);
 		mGridView.setAdapter(mAlbumFolderAdapter);
 		return mRootView;
+	}
+
+	@NonNull
+	private ArrayList<MediaFolder> initMediaFolders(ArrayList<MediaFolder> mediaFolders) {
+		mMediaFolders.clear();
+		for (MediaFolder mediaFolder : mediaFolders) {
+			if (!mediaFolder.isOther()) {
+				mMediaFolders.add(mediaFolder);
+			}
+		}
+		return mMediaFolders;
 	}
 
 	@Override
@@ -76,15 +82,21 @@ public class AlbumFragment extends MediaDataObserverFragment<MediaFolder> implem
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		MediaFolder mediaFolder = mAlbumFolderAdapter.getData().get(position);
-		PhotoPageFragment photoFragment = new PhotoPageFragment();
-		Bundle args = new Bundle();
-		args.putInt(PhotoPageFragment.KEY_CURRENT_INDEX, 0);
-		args.putString(PhotoPageFragment.KEY_BUCKET_ID, mediaFolder.getBucketId());
-		photoFragment.setArguments(args);
+		List<MediaFolder> mediaFolders = mAlbumFolderAdapter.getData();
+		MediaFolder mediaFolder = mediaFolders.get(position);
+		Fragment fragment;
+		if (position == mediaFolders.size() - 1) {
+			fragment = new AlbumOtherFragment();
+		} else {
+			fragment = new PhotoPageFragment();
+			Bundle args = new Bundle();
+			args.putInt(PhotoPageFragment.KEY_CURRENT_INDEX, 0);
+			args.putString(PhotoPageFragment.KEY_BUCKET_ID, mediaFolder.getBucketId());
+			fragment.setArguments(args);
+		}
 		mActivity.getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.content, photoFragment, PhotoPageFragment.class.getSimpleName())
+				.replace(R.id.content, fragment, fragment.getClass().getCanonicalName())
 				.addToBackStack(null)
 				.commit();
 	}
@@ -92,6 +104,7 @@ public class AlbumFragment extends MediaDataObserverFragment<MediaFolder> implem
 	@Override
 	public void notifyChange(ArrayList<MediaFolder> srcData, ArrayList<MediaFolder> handleData) {
 		LogUtil.e(TAG, "notifyChange----------> isVisible = " + isVisible());
+		initMediaFolders(GlobalDataStorage.INSTANCE.getMediaFolders());
 		if (isVisible()) {
 			mAlbumFolderAdapter.notifyDataSetChanged();
 		} else {

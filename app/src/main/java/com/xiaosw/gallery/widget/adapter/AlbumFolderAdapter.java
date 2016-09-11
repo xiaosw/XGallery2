@@ -28,8 +28,8 @@ public class AlbumFolderAdapter extends AbsBaseAdapter<MediaFolder> {
     private RequestManager mRequestManager;
     private SupportGridView mGridView;
     private int mHorizontalSpacing;
-    public AlbumFolderAdapter(Context context, SupportGridView gridView) {
-        super(context, GlobalDataStorage.INSTANCE.getMediaFolders(), R.layout.item_album_folder);
+    public AlbumFolderAdapter(Context context, ArrayList<MediaFolder> mediaFolders, SupportGridView gridView) {
+        super(context, mediaFolders, R.layout.item_album_folder);
         this.mRequestManager = Glide.with(context);
         this.mGridView = gridView;
         Resources res = context.getResources();
@@ -56,6 +56,9 @@ public class AlbumFolderAdapter extends AbsBaseAdapter<MediaFolder> {
         }
 
         bindText(R.id.tv_album_folder_name, itemData.getFolderName() + " ");
-        bindText(R.id.tv_album_folder_total_size, " (" + itemData.getTotalSize() + ")");
+        if (itemData.getFolderPosition() != Integer.MAX_VALUE) {
+            bindText(R.id.tv_album_folder_total_size, " (" + itemData.getTotalSize() + ")");
+        }
+
     }
 }

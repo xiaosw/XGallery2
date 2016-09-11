@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/clr_black_100"
-    android:orientation="vertical">
-    
-    <include
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/view_function_header"
-        android:layout_marginBottom="3dp"/>
+        android:layout_height="match_parent"
+        android:background="@color/clr_black_100"
+        android:orientation="vertical">
 
-    <com.xiaosw.gallery.viewer.SupportViewPager
-        android:id="@+id/view_pager_photo_page"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/view_function_header"
+            android:layout_marginBottom="3dp"/>
 
-    <com.xiaosw.gallery.viewer.PhotoPageRecyclerView
-        android:id="@+id/recycler_view_phogo_page_gallery"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_height_gallery_item" />
+        <com.xiaosw.gallery.viewer.SupportViewPager
+            android:id="@+id/view_pager_photo_page"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
-</LinearLayout>
+        <com.xiaosw.gallery.viewer.PhotoPageRecyclerView
+            android:id="@+id/recycler_view_phogo_page_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_height_gallery_item" />
+
+    </LinearLayout>
+</RelativeLayout>
+

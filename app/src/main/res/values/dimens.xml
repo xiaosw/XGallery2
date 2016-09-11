@@ -8,6 +8,7 @@
     <dimen name="view_height_gallery_item">100dp</dimen>
     <dimen name="view_height_icon">64dp</dimen>
     <dimen name="view_height_icon_padding">16dp</dimen>
+    <dimen name="view_height_album_other_icon">80dp</dimen>
 
     <!-- 图片尺寸 -->
     <integer name="drawable_tab_icon_size">64</integer>

@@ -6,7 +6,9 @@
     android:focusable="true"
     android:clickable="true"
     android:background="@drawable/selector_drawable_photo_preview_gallery"
-    android:padding="@dimen/padding_photo_prev_gallery">
+    android:padding="@dimen/padding_photo_prev_gallery"
+    android:gravity="center"
+    android:layout_gravity="center">
 
     <ImageView
         android:id="@+id/iv_photo"
