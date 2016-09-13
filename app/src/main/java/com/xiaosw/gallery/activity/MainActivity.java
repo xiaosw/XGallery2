@@ -78,12 +78,17 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
 		}
 	}
 
-	private void initMain() {
+	private boolean isInitialized;
+	private synchronized void initMain() {
+		if (isInitialized) {
+			return;
+		}
 		getSupportLoaderManager().initLoader(new Random().nextInt(Integer.MAX_VALUE), null, this);
 		getSupportFragmentManager()
 				.beginTransaction()
-				.add(R.id.content, new MainFragment(), MainFragment.class.getSimpleName())
+				.replace(R.id.content, new MainFragment(), MainFragment.class.getSimpleName())
 				.commit();
+		isInitialized = true;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
