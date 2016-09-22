@@ -1,115 +1,132 @@
 package com.xiaosw.gallery.activity.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.xiaosw.gallery.R;
-import com.xiaosw.gallery.bean.MediaFolder;
+import com.xiaosw.gallery.activity.MainActivity;
+import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
-import com.xiaosw.gallery.util.LogUtil;
-import com.xiaosw.gallery.viewer.SupportGridView;
-import com.xiaosw.gallery.widget.adapter.AlbumFolderAdapter;
+import com.xiaosw.gallery.viewer.SuperRecyclervView;
+import com.xiaosw.gallery.viewer.divider.DividerGridItemDecoration;
+import com.xiaosw.gallery.widget.adapter.AlbumAdapter;
+import com.xiaosw.gallery.widget.listener.OnItemClickListener;
+import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * @ClassName : {@link AlbumFragment}
- * @Description : 相册页
+ * @Description : 相册目录预览
  *
  * @Author xiaosw<xiaoshiwang@putao.com>
- * @Date 2016-09-09 11:11:51
+ * @Date 2016-09-22 15:15:09
  */
-public class AlbumFragment extends MediaDataObserverFragment<MediaFolder> implements AdapterView.OnItemClickListener {
-    private String TAG = "AlbumFragment";
+public class AlbumFragment extends ContainerHeaderFragment<MediaItem> implements OnItemClickListener,
+    OnItemLongClickListener {
 
-    @Bind(R.id.grid_view)
-    SupportGridView mGridView;
+    @Bind(R.id.super_recycler_view)
+    SuperRecyclervView mSuperRecyclervView;
 
-    private AlbumFolderAdapter mAlbumFolderAdapter;
-    private ArrayList<MediaFolder> mMediaFolders;
+    private AlbumAdapter mAlbumAdapter;
+    private MainActivity mMainActivity;
+    private String mBucketeId;
+    private ArrayList<MediaItem> mData;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mMediaFolders = new ArrayList<>();
+        mMainActivity = (MainActivity) mActivity;
+        mBucketeId = getArguments().getString(PhotoPageFragment.KEY_BUCKET_ID);
+        mData = new ArrayList<MediaItem>();
+        filterData();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mRootView = inflater.inflate(R.layout.fragment_album_page, null);
+        mRootView = inflater.inflate(R.layout.fragment_album, null);
         ButterKnife.bind(this, mRootView);
-        mGridView.setOnItemClickListener(this);
-        ArrayList<MediaFolder> mediaFolders = GlobalDataStorage.INSTANCE.getMediaFolders();
-        initMediaFolders(mediaFolders);
-        LogUtil.e("mainMediaFolders-----------> " + mMediaFolders.size() + ", mediaFolders = " + mediaFolders.size());
-        mAlbumFolderAdapter = new AlbumFolderAdapter(getContext(), mMediaFolders, mGridView);
-        mGridView.setAdapter(mAlbumFolderAdapter);
+        setTitle(getArguments().getString(KEY_TITLE));
+        int orientation = getResources().getConfiguration().orientation;
+        int numColumns = 0;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            numColumns = getResources().getInteger(R.integer.num_coloum_date_line_land);
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            numColumns = getResources().getInteger(R.integer.num_coloum_date_line_port);
+        }
+        mSuperRecyclervView.setOnItemClickListener(this);
+        mSuperRecyclervView.setOnItemLongClickListener(this);
+        mSuperRecyclervView.addItemDecoration(new DividerGridItemDecoration(getContext()));
+        mSuperRecyclervView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
+        mAlbumAdapter = new AlbumAdapter(getContext(), mData);
+        mSuperRecyclervView.setAdapter(mAlbumAdapter);
         return mRootView;
     }
 
-    @NonNull
-    private ArrayList<MediaFolder> initMediaFolders(ArrayList<MediaFolder> mediaFolders) {
-        mMediaFolders.clear();
-        for (MediaFolder mediaFolder : mediaFolders) {
-            if (!mediaFolder.isOther()) {
-                mMediaFolders.add(mediaFolder);
+    private ArrayList<MediaItem> filterData() {
+        ArrayList<MediaItem> mediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
+        if (!TextUtils.isEmpty(mBucketeId)) {
+            for (MediaItem mediaItem : mediaItems) {
+                if (mBucketeId.equals(mediaItem.getBucketId())) {
+                    mData.add(mediaItem);
+                }
             }
-        }
-        return mMediaFolders;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (needRefresh) {
-            mAlbumFolderAdapter.notifyDataSetChanged();
-            needRefresh = false;
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        List<MediaFolder> mediaFolders = mAlbumFolderAdapter.getData();
-        MediaFolder mediaFolder = mediaFolders.get(position);
-        Fragment fragment;
-        if (position == mediaFolders.size() - 1) {
-            fragment = new AlbumOtherFragment();
         } else {
-            fragment = new PhotoPageFragment();
-            Bundle args = new Bundle();
-            args.putInt(PhotoPageFragment.KEY_CURRENT_INDEX, 0);
-            args.putString(PhotoPageFragment.KEY_BUCKET_ID, mediaFolder.getBucketId());
-            fragment.setArguments(args);
+            mData.addAll(mediaItems);
         }
-        mActivity.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content, fragment, fragment.getClass().getCanonicalName())
-                .addToBackStack(null)
-                .commit();
+        return mData;
     }
 
     @Override
-    public void notifyChange(ArrayList<MediaFolder> srcData, ArrayList<MediaFolder> handleData) {
-        LogUtil.e(TAG, "notifyChange----------> isVisible = " + isVisible());
-        initMediaFolders(GlobalDataStorage.INSTANCE.getMediaFolders());
-        if (isVisible()) {
-            mAlbumFolderAdapter.notifyDataSetChanged();
-        } else {
-            needRefresh = true;
+    public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
+        super.notifyChange(srcData, handleData);
+        mAlbumAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(View view, int position, boolean isSelecteMode) {
+        MediaItem mediaItem = GlobalDataStorage.INSTANCE.getSrcMediaItems().get(position);
+        if (mediaItem.getId() == -1) {
+            return;
         }
+        if ( mMainActivity.getActionType() == MainActivity.ACTION_TYPE_SELECT) { // select
+            Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI; // default is image
+            if (mediaItem.getMimeType().contains("video/")) {
+                uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+            }
+            Intent intent = new Intent(null, Uri.parse(uri + File.separator + mediaItem.getId()))
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            mActivity.setResult(Activity.RESULT_OK, intent);
+            mActivity.finish();
+            return;
+        }
+        PhotoPageFragment photoFragment = new PhotoPageFragment();
+        Bundle args = new Bundle();
+        args.putInt(PhotoPageFragment.KEY_CURRENT_INDEX, position);
+        args.putString(PhotoPageFragment.KEY_BUCKET_ID, mBucketeId);
+        photoFragment.setArguments(args);
+        switchFragment(photoFragment);
+    }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
 
     }
 }

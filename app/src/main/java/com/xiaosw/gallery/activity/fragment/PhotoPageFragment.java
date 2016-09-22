@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiaosw.gallery.R;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * @ClassName : {@link PhotoPageFragment}
@@ -37,7 +35,7 @@ import butterknife.OnClick;
  * @Author xiaosw<xiaoshiwang@putao.com>
  * @Date 2016-09-09 22:22:09
  */
-public class PhotoPageFragment extends MediaDataObserverFragment implements ViewPager.OnPageChangeListener,
+public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implements ViewPager.OnPageChangeListener,
         OnItemClickListener, PhotoPageGallerAdapter.OnItemSelectedChangedListener, View.OnTouchListener {
 
     public static final String KEY_CURRENT_INDEX = "CURRENT_INDEX";
@@ -48,16 +46,6 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
 
     @Bind(R.id.recycler_view_phogo_page_gallery)
     PhotoPageRecyclerView mRecyclerView;
-
-    @Bind(R.id.tv_title)
-    TextView tv_title; // 头标题
-
-    @Bind(R.id.tv_function)
-    TextView tv_function; // 头右侧按钮
-
-    @Bind(R.id.view_header_container)
-    View view_header_container; // 头
-
 
     /** 当前现实图片的下标 */
     private int mCurrentIndex;
@@ -147,8 +135,8 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
         });
         mViewPager.setCurrentItem(mCurrentIndex);
 
-        tv_title.setText(mPageAdapter.getPageTitle(mCurrentIndex));
-        tv_function.setText(R.string.str_photo_perview_header_function);
+        setTitle(mPageAdapter.getPageTitle(mCurrentIndex));
+        setFunctionDescription(R.string.str_photo_perview_header_function);
         return mRootView;
     }
 
@@ -158,11 +146,6 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
             view.requestFocus();
             mViewPager.setCurrentItem(focusPosition);
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     @Override
@@ -205,7 +188,7 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
         mCurrentIndex = position;
         mLayoutManager.scrollToPosition(mCurrentIndex);
         reqeustFocus(mCurrentIndex);
-        tv_title.setText(mPageAdapter.getPageTitle(position));
+        setTitle(mPageAdapter.getPageTitle(position));
     }
 
     @Override
@@ -222,14 +205,8 @@ public class PhotoPageFragment extends MediaDataObserverFragment implements View
         this.mCurrentIndex = newIndex;
     }
 
-    @OnClick(R.id.iv_back)
-    public void onBack(View view) {
-        getActivity().onBackPressed();
-    }
-
-    @OnClick(R.id.tv_function)
-    public void doFunction(View view) {
+    @Override
+    void doFunctionOperation() {
         PTToast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT);
     }
-
 }

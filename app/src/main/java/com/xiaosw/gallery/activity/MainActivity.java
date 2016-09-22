@@ -1,6 +1,7 @@
 package com.xiaosw.gallery.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,6 +28,15 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
         LoaderManager.LoaderCallbacks<Cursor> {
     /** 请求存储权限 */
     public static final int PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 1001;
+    /** 预览action */
+    public static final String ACTION_REVIEW = "com.android.camera.action.REVIEW";
+    /** 正常启动 */
+    public static final int ACTION_TYPE_DEFAULT = 0;
+    /** 三方应用选择项目*/
+    public static final int ACTION_TYPE_SELECT = 1;
+    /** 预览 */
+    public static final int ACTION_TYPE_REVIEW = 2;
+    private int mActionType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +47,31 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
                 PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE,
                 new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 this);
+
+        initializeByIntent();
     }
 
+    private void initializeByIntent() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (Intent.ACTION_PICK.equalsIgnoreCase(action)
+            || Intent.ACTION_GET_CONTENT.equalsIgnoreCase(action)) {
+            // select photo
+            mActionType = ACTION_TYPE_SELECT;
+        } else if (Intent.ACTION_VIEW.equalsIgnoreCase(action)
+            || ACTION_REVIEW.equalsIgnoreCase(action)) {
+            // review
+            mActionType = ACTION_TYPE_REVIEW;
+        } else {
+            // default
+            mActionType = ACTION_TYPE_DEFAULT;
+        }
 
+    }
+
+    public int getActionType() {
+        return mActionType;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // 权限处理部分 begin

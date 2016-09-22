@@ -8,4 +8,9 @@
         <attr name="src" format="reference"></attr>
     </declare-styleable>
 
+    <declare-styleable name="SuperRecyclervView">
+        <attr name="landNumColumns" format="integer"></attr>
+        <attr name="portNumColumns" format="integer"></attr>
+    </declare-styleable>
+
 </resources>

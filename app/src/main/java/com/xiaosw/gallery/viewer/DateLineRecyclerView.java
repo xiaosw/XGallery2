@@ -20,7 +20,7 @@ import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.BaseRecyclerBean;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.widget.adapter.BaseRecyclerAdapter;
-import com.xiaosw.gallery.widget.adapter.DateLineAdapter;
+import com.xiaosw.gallery.widget.adapter.DateLineTabAdapter;
 import com.xiaosw.gallery.widget.listener.OnItemClickListener;
 import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
 
@@ -153,8 +153,8 @@ public class DateLineRecyclerView extends RecyclerView implements OnItemClickLis
         setRecyclerListener(new RecyclerListener() {
             @Override
             public void onViewRecycled(ViewHolder holder) {
-                if (holder instanceof DateLineAdapter.DateLineRecyclerHolder) {
-                    DateLineAdapter.DateLineRecyclerHolder realHolder = (DateLineAdapter.DateLineRecyclerHolder) holder;
+                if (holder instanceof DateLineTabAdapter.DateLineRecyclerHolder) {
+                    DateLineTabAdapter.DateLineRecyclerHolder realHolder = (DateLineTabAdapter.DateLineRecyclerHolder) holder;
                     mTitleLineViews.remove(realHolder.getItemView().getTag());
                 }
             }
@@ -196,8 +196,8 @@ public class DateLineRecyclerView extends RecyclerView implements OnItemClickLis
             setItemWidthByViewWidth(getWidth());
         }
         Adapter adapter = getAdapter();
-        if (null != adapter && adapter instanceof DateLineAdapter) {
-            handleRow((DateLineAdapter) adapter);
+        if (null != adapter && adapter instanceof DateLineTabAdapter) {
+            handleRow((DateLineTabAdapter) adapter);
             if (mFirstItemIndex > getSpanCount()) {
                 getLayoutManager().scrollToPosition(mFirstItemIndex);
             }
@@ -341,8 +341,8 @@ public class DateLineRecyclerView extends RecyclerView implements OnItemClickLis
     @Override
     public void setAdapter(Adapter adapter) {
         if (adapter != null) {
-            if (adapter instanceof DateLineAdapter) {
-                handleRow((DateLineAdapter) adapter);
+            if (adapter instanceof DateLineTabAdapter) {
+                handleRow((DateLineTabAdapter) adapter);
             }
             if (adapter instanceof BaseRecyclerAdapter) {
                 BaseRecyclerAdapter baseRecyclerAdapter = (BaseRecyclerAdapter) adapter;

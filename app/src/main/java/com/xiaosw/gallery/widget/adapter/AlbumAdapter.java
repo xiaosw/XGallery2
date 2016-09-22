@@ -13,8 +13,7 @@ import com.bumptech.glide.RequestManager;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.config.AppConfig;
-import com.xiaosw.gallery.util.GlobalDataStorage;
-import com.xiaosw.gallery.viewer.DateLineRecyclerView;
+import com.xiaosw.gallery.viewer.BaseRecyclerView;
 import com.xiaosw.gallery.widget.listener.OnItemClickListener;
 import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
 
@@ -24,20 +23,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * @ClassName : {@link DateLineAdapter}
- * @Description :
+ * @ClassName : {@link AlbumAdapter}
+ * @Description : 相册目录预览
  *
  * @Author xiaosw<xiaoshiwang@putao.com>
  * @Date 2016-09-09 16:16:05
  */
-public class DateLineAdapter extends RecyclerView.Adapter<DateLineAdapter.DateLineRecyclerHolder> implements
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.DateLineRecyclerHolder> implements
         BaseRecyclerAdapter<MediaItem> {
     private Context mContext;
-    private DateLineRecyclerView mRecyclerView;
+    private BaseRecyclerView mRecyclerView;
     private RequestManager mRequestManager;
     private ArrayList<MediaItem> mMediaItems;
-
-    private ViewGroup.LayoutParams mTitleViewParams;
     private ViewGroup.LayoutParams mWarpContentParams;
 
     private OnItemClickListener mOnItemClickListener;
@@ -47,47 +44,41 @@ public class DateLineAdapter extends RecyclerView.Adapter<DateLineAdapter.DateLi
     /** 仿重复点击 */
     private long mLastClickTime;
 
-    public DateLineAdapter(Context context, DateLineRecyclerView recyclerView) {
+    public AlbumAdapter(Context context, ArrayList<MediaItem> data) {
         this.mContext = context.getApplicationContext();
-        this.mRecyclerView = recyclerView;
         this.mRequestManager = Glide.with(mContext);
-        mMediaItems = GlobalDataStorage.INSTANCE.getHandleMediaItems();
+        mMediaItems = data;
     }
 
     @Override
-    public DateLineAdapter.DateLineRecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mTitleViewParams =  new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) mContext.getResources().getDimension(R.dimen.view_height_date_line_title));
+    public AlbumAdapter.DateLineRecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mWarpContentParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        return new DateLineRecyclerHolder(View.inflate(mContext, R.layout.item_date_line, null));
+        if (!(parent instanceof BaseRecyclerView)) {
+            throw new IllegalArgumentException("RecyclerView must instaceof BaseRecyclerView!!!");
+        }
+        mRecyclerView = (BaseRecyclerView) parent;
+        mRecyclerView.updateItemSize();
+        return new DateLineRecyclerHolder(View.inflate(mContext, R.layout.item_album, null));
     }
 
     @Override
-    public void onBindViewHolder(DateLineAdapter.DateLineRecyclerHolder holder, int position) {
+    public void onBindViewHolder(AlbumAdapter.DateLineRecyclerHolder holder, int position) {
         MediaItem mediaItem = mMediaItems.get(position);
-        if (mediaItem.isTitleLine()) {
-            holder.getItemView().setLayoutParams(mTitleViewParams);
-            holder.iv_image.setImageDrawable(null);
-            holder.getItemView().setTag(mediaItem.getTitlePosition());
-            mRecyclerView.setDrawCircle(mediaItem, holder.getItemView());
-        } else {
-            holder.getItemView().setTag(-1);
-            if (holder.iv_image.getLayoutParams().height != mRecyclerView.getItemWidth()) {
-                holder.iv_image.getLayoutParams().height = mRecyclerView.getItemWidth();
-            }
-            if (holder.iv_image.getLayoutParams().width != mRecyclerView.getItemWidth()) {
-                holder.iv_image.getLayoutParams().width = mRecyclerView.getItemWidth();
-            }
-            if (!TextUtils.isEmpty(mediaItem.getData())) {
-                mRequestManager.load(AppConfig.GLIDE_NATIVE_PREFIX.concat(mediaItem.getData()))
-                        .priority(Priority.HIGH)
-                        .override(mRecyclerView.getItemWidth(), mRecyclerView.getItemWidth())
-                        .centerCrop()
-                        .into(holder.iv_image);
-            }
+        holder.itemView.setTag(-1);
+        if (holder.iv_image.getLayoutParams().height != mRecyclerView.getItemSize().width) {
+            holder.iv_image.getLayoutParams().height = mRecyclerView.getItemSize().width;
+        }
+        if (holder.iv_image.getLayoutParams().width != mRecyclerView.getItemSize().width) {
+            holder.iv_image.getLayoutParams().width = mRecyclerView.getItemSize().width;
+        }
+        if (!TextUtils.isEmpty(mediaItem.getData())) {
+            mRequestManager.load(AppConfig.GLIDE_NATIVE_PREFIX.concat(mediaItem.getData()))
+                .priority(Priority.HIGH)
+                .override(mRecyclerView.getItemSize().width, mRecyclerView.getItemSize().width)
+                .centerCrop()
+                .into(holder.iv_image);
         }
     }
 
@@ -125,19 +116,13 @@ public class DateLineAdapter extends RecyclerView.Adapter<DateLineAdapter.DateLi
 
     public class DateLineRecyclerHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener, View.OnLongClickListener {
-        private View mItemView;
         @Bind(R.id.iv_image)
         ImageView iv_image;
         public DateLineRecyclerHolder(View itemView) {
             super(itemView);
-            this.mItemView = itemView;
-            ButterKnife.bind(this, mItemView);
-            mItemView.setOnClickListener(this);
-            mItemView.setOnLongClickListener(this);
-        }
-
-        public View getItemView() {
-            return mItemView;
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override

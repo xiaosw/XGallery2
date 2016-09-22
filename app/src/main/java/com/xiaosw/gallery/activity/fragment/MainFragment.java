@@ -93,8 +93,8 @@ public class MainFragment extends BaseFragment {
     private ArrayList<Fragment> initPages() {
         mPages.clear();
 
-        mPages.add(new DateLineFragment());
-        mPages.add(new AlbumFragment());
+        mPages.add(new DateLineTabFragment());
+        mPages.add(new AlbumTabFragment());
         return mPages;
     }
 

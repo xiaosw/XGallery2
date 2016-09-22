@@ -9,19 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaFolder;
+import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
-import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.widget.adapter.AlbumFolderOtherAdapter;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * @ClassName {@link AlbumOtherFragment}
@@ -30,13 +28,10 @@ import butterknife.OnClick;
  * @Date 2016-09-10 22:02.
  * @Author xiaoshiwang.
  */
-public class AlbumOtherFragment extends MediaDataObserverFragment<MediaFolder> {
+public class AlbumOtherFragment extends ContainerHeaderFragment<MediaItem> {
     private String TAG = "AlbumOtherFragment";
     @Bind(R.id.list_view_album_other)
     ListView mListView;
-
-    @Bind(R.id.tv_title)
-    TextView tv_title;
 
     private ArrayList<MediaFolder> mMediaFolders;
     private AlbumFolderOtherAdapter mAlbumFolderOtherAdapter;
@@ -54,31 +49,26 @@ public class AlbumOtherFragment extends MediaDataObserverFragment<MediaFolder> {
         super.onCreateView(inflater, container, savedInstanceState);
         mRootView = inflater.inflate(R.layout.fragment_album_other, null);
         ButterKnife.bind(this, mRootView);
-        tv_title.setText(R.string.str_folder_name_other);
+        setTitle(R.string.str_folder_name_other);
         mAlbumFolderOtherAdapter = new AlbumFolderOtherAdapter(getContext(), mMediaFolders, mListView);
         mListView.setAdapter(mAlbumFolderOtherAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MediaFolder mediaFolder = mMediaFolders.get(position);
-                Fragment fragment = new PhotoPageFragment();
+                Fragment fragment = new AlbumFragment();
                 Bundle args = new Bundle();
-                args.putInt(PhotoPageFragment.KEY_CURRENT_INDEX, 0);
                 args.putString(PhotoPageFragment.KEY_BUCKET_ID, mediaFolder.getBucketId());
+                args.putString(ContainerHeaderFragment.KEY_TITLE, mediaFolder.getFolderName());
                 fragment.setArguments(args);
-                mActivity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.content, fragment, fragment.getClass().getCanonicalName())
-                        .addToBackStack(null)
-                        .commit();
+                switchFragment(fragment);
             }
         });
         return mRootView;
     }
 
     @Override
-    public void notifyChange(ArrayList<MediaFolder> srcData, ArrayList<MediaFolder> handleData) {
-        LogUtil.e(TAG, "notifyChange----------> isVisible = " + isVisible());
+    public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
         initOtherFolders();
         if (isVisible()) {
             mAlbumFolderOtherAdapter.notifyDataSetChanged();
@@ -86,11 +76,6 @@ public class AlbumOtherFragment extends MediaDataObserverFragment<MediaFolder> {
             needRefresh = true;
         }
 
-    }
-
-    @OnClick(R.id.iv_back)
-    public void onBack(View view) {
-        getActivity().onBackPressed();
     }
 
     private ArrayList<MediaFolder> initOtherFolders() {
