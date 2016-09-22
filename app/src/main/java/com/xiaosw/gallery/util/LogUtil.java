@@ -16,157 +16,157 @@ import com.xiaosw.gallery.config.AppConfig;
  * @Author xiaoshiwang
  */
 public class LogUtil {
-	
-	public static String tag = "%s.%s:L%d";
-	public static String customTagPrefix;
-	public static boolean isDebulg = AppConfig.DEBUG;
-	public static boolean printV = AppConfig.DEBUG;
-	public static boolean printI = AppConfig.DEBUG;
-	public static boolean printD = AppConfig.DEBUG;
-	public static boolean printW = AppConfig.DEBUG;
-	public static boolean printE = AppConfig.DEBUG;
-	public static boolean printWtf = AppConfig.DEBUG;
-	
-	@SuppressWarnings("unused")
-	private void openLog() {
-		isDebulg = true;
-		printV = true;
-		printI = true;
-		printD = true;
-		printW = true;
-		printE = true;
-		printWtf = true;
-	}
-	
-	@SuppressWarnings("unused")
-	private void closeLog() {
-		isDebulg = false;
-		printV = false;
-		printI = false;
-		printD = false;
-		printW = false;
-		printE = false;
-		printWtf = false;
-	}
-	
-	private static String getTag() {
-		StackTraceElement mStackTraceElement = Thread.currentThread().getStackTrace()[4];
-		// 全类名
-		String className = mStackTraceElement.getClassName();
-		className = className.substring(className.lastIndexOf(".") + 1);
-		// 方法名
-		String methodName = mStackTraceElement.getMethodName();
-		// 调用处所在行
-		int lineNumber = mStackTraceElement.getLineNumber();
-		tag = String.format(tag, className, methodName, lineNumber);
-		return null == customTagPrefix ? tag : customTagPrefix + "--->" + tag;
-	}
-	
-	public static void printMsg(String msg) {
-		if(isDebulg) {
-			System.out.println(getTag() + ":" + msg);
-		}
-	}
-	
-	public static void printException(Throwable t) {
-		if(isDebulg) {
-			t.printStackTrace();
-		}
-	}
-	
-	public static void v(String msg) {
-		if(printV) {
-			Log.v(getTag(), msg);
-		}
-	};
-	
-	public static void v(String msg, Throwable tr) {
-		if(printV) {
-			Log.v(getTag(), msg, tr);
-		}
-	};
-	
-	public static void i(String msg) {
-		if(printI) {
-			Log.i(getTag(), msg);
-		}
-	};
-	
-	public static void i(String msg, Throwable tr) {
-		if(printI) {
-			Log.i(getTag(), msg, tr);
-		}
-	};
-	
-	public static void d(String msg) {
-		if(printD) {
-			Log.d(getTag(), msg);
-		}
-	};
-	
-	public static void d(String msg, Throwable tr) {
-		if(printD) {
-			Log.d(getTag(), msg, tr);
-		}
-	};
-	
-	public static void w(String msg) {
-		if(printW) {
-			Log.w(getTag(), msg);
-		}
-	};
-	
-	public static void w(Throwable tr) {
-		if(printW) {
-			Log.w(getTag(), tr);
-		}
-	};
-	
-	public static void w(String msg, Throwable tr) {
-		if(printW) {
-			Log.w(getTag(), msg, tr);
-		}
-	};
-	
-	public static void e(String msg) {
-		e(getTag(), msg);
-	};
 
-	public static void e(String tag, String msg) {
-		if(printE) {
-			Log.e(tag, msg);
-		}
-	};
+    public static String tag = "%s.%s:L%d";
+    public static String customTagPrefix;
+    public static boolean isDebulg = AppConfig.DEBUG;
+    public static boolean printV = AppConfig.DEBUG;
+    public static boolean printI = AppConfig.DEBUG;
+    public static boolean printD = AppConfig.DEBUG;
+    public static boolean printW = AppConfig.DEBUG;
+    public static boolean printE = AppConfig.DEBUG;
+    public static boolean printWtf = AppConfig.DEBUG;
 
-	public static void e(String msg, Throwable tr) {
-		e(getTag(), msg, tr);
-	};
+    @SuppressWarnings("unused")
+    private void openLog() {
+        isDebulg = true;
+        printV = true;
+        printI = true;
+        printD = true;
+        printW = true;
+        printE = true;
+        printWtf = true;
+    }
 
-	public static void e(String tag, String msg, Throwable tr) {
-		if(printE) {
-			Log.e(tag, msg, tr);
-		}
-	};
-	
-	public static void wtf(String msg) {
-		if(printWtf) {
-			Log.wtf(getTag(), msg);
-		}
-	};
-	
-	public static void wtf(Throwable tr) {
-		if(printWtf) {
-			Log.wtf(getTag(), tr);
-		}
-	};
-	
-	public static void wtf(String msg, Throwable tr) {
-		if(printWtf) {
-			Log.wtf(getTag(), msg, tr);
-		}
-	};
+    @SuppressWarnings("unused")
+    private void closeLog() {
+        isDebulg = false;
+        printV = false;
+        printI = false;
+        printD = false;
+        printW = false;
+        printE = false;
+        printWtf = false;
+    }
 
-	private LogUtil() {
-	}
+    private static String getTag() {
+        StackTraceElement mStackTraceElement = Thread.currentThread().getStackTrace()[4];
+        // 全类名
+        String className = mStackTraceElement.getClassName();
+        className = className.substring(className.lastIndexOf(".") + 1);
+        // 方法名
+        String methodName = mStackTraceElement.getMethodName();
+        // 调用处所在行
+        int lineNumber = mStackTraceElement.getLineNumber();
+        tag = String.format(tag, className, methodName, lineNumber);
+        return null == customTagPrefix ? tag : customTagPrefix + "--->" + tag;
+    }
+
+    public static void printMsg(String msg) {
+        if(isDebulg) {
+            System.out.println(getTag() + ":" + msg);
+        }
+    }
+
+    public static void printException(Throwable t) {
+        if(isDebulg) {
+            t.printStackTrace();
+        }
+    }
+
+    public static void v(String msg) {
+        if(printV) {
+            Log.v(getTag(), msg);
+        }
+    };
+
+    public static void v(String msg, Throwable tr) {
+        if(printV) {
+            Log.v(getTag(), msg, tr);
+        }
+    };
+
+    public static void i(String msg) {
+        if(printI) {
+            Log.i(getTag(), msg);
+        }
+    };
+
+    public static void i(String msg, Throwable tr) {
+        if(printI) {
+            Log.i(getTag(), msg, tr);
+        }
+    };
+
+    public static void d(String msg) {
+        if(printD) {
+            Log.d(getTag(), msg);
+        }
+    };
+
+    public static void d(String msg, Throwable tr) {
+        if(printD) {
+            Log.d(getTag(), msg, tr);
+        }
+    };
+
+    public static void w(String msg) {
+        if(printW) {
+            Log.w(getTag(), msg);
+        }
+    };
+
+    public static void w(Throwable tr) {
+        if(printW) {
+            Log.w(getTag(), tr);
+        }
+    };
+
+    public static void w(String msg, Throwable tr) {
+        if(printW) {
+            Log.w(getTag(), msg, tr);
+        }
+    };
+
+    public static void e(String msg) {
+        e(getTag(), msg);
+    };
+
+    public static void e(String tag, String msg) {
+        if(printE) {
+            Log.e(tag, msg);
+        }
+    };
+
+    public static void e(String msg, Throwable tr) {
+        e(getTag(), msg, tr);
+    };
+
+    public static void e(String tag, String msg, Throwable tr) {
+        if(printE) {
+            Log.e(tag, msg, tr);
+        }
+    };
+
+    public static void wtf(String msg) {
+        if(printWtf) {
+            Log.wtf(getTag(), msg);
+        }
+    };
+
+    public static void wtf(Throwable tr) {
+        if(printWtf) {
+            Log.wtf(getTag(), tr);
+        }
+    };
+
+    public static void wtf(String msg, Throwable tr) {
+        if(printWtf) {
+            Log.wtf(getTag(), msg, tr);
+        }
+    };
+
+    private LogUtil() {
+    }
 
 }

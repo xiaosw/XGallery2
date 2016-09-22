@@ -1,6 +1,5 @@
 package com.xiaosw.gallery.activity.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,12 +14,12 @@ import android.view.View;
  */
 public class BaseFragment extends Fragment {
 
-	FragmentActivity mActivity;
-	View mRootView;
+    FragmentActivity mActivity;
+    View mRootView;
 
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		mActivity = getActivity();
-	}
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = getActivity();
+    }
 }

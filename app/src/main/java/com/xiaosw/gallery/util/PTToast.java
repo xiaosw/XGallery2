@@ -13,40 +13,40 @@ import android.widget.Toast;
  */
 public class PTToast {
 
-	private static Toast mToast;
+    private static Toast mToast;
 
-	/**
-	 * Make a standard toast that just contains a text view with the text from a resource.
-	 *
-	 * @param context  The context to use.  Usually your {@link android.app.Application}
-	 *                 or {@link android.app.Activity} object.
-	 * @param resId    The resource id of the string resource to use.  Can be formatted text.
-	 * @param duration How long to display the message.  Either {@link Toast#LENGTH_SHORT} or
-	 *                 {@link Toast#LENGTH_LONG}
-	 *
-	 * @throws Resources.NotFoundException if the resource can't be found.
-	 */
-	public static void makeText(Context context, int resId, int duration)
-			throws Resources.NotFoundException {
-		makeText(context, context.getResources().getText(resId), duration);
-	}
+    /**
+     * Make a standard toast that just contains a text view with the text from a resource.
+     *
+     * @param context  The context to use.  Usually your {@link android.app.Application}
+     *                 or {@link android.app.Activity} object.
+     * @param resId    The resource id of the string resource to use.  Can be formatted text.
+     * @param duration How long to display the message.  Either {@link Toast#LENGTH_SHORT} or
+     *                 {@link Toast#LENGTH_LONG}
+     *
+     * @throws Resources.NotFoundException if the resource can't be found.
+     */
+    public static void makeText(Context context, int resId, int duration)
+            throws Resources.NotFoundException {
+        makeText(context, context.getResources().getText(resId), duration);
+    }
 
 
-	/**
-	 * Make a standard toast that just contains a text view.
-	 *
-	 * @param context  The context to use.  Usually your {@link android.app.Application}
-	 *                 or {@link android.app.Activity} object.
-	 * @param text     The text to show.  Can be formatted text.
-	 * @param duration How long to display the message.  Either {@link Toast#LENGTH_SHORT} or
-	 *                 {@link Toast#LENGTH_LONG}
-	 *
-	 */
-	public static void makeText(Context context, CharSequence text, int duration) {
-		if (mToast != null) {
-			mToast.cancel();
-		}
-		mToast = Toast.makeText(context, text, duration);
-		mToast.show();
-	}
+    /**
+     * Make a standard toast that just contains a text view.
+     *
+     * @param context  The context to use.  Usually your {@link android.app.Application}
+     *                 or {@link android.app.Activity} object.
+     * @param text     The text to show.  Can be formatted text.
+     * @param duration How long to display the message.  Either {@link Toast#LENGTH_SHORT} or
+     *                 {@link Toast#LENGTH_LONG}
+     *
+     */
+    public static void makeText(Context context, CharSequence text, int duration) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(context, text, duration);
+        mToast.show();
+    }
 }

@@ -9,14 +9,14 @@ package com.xiaosw.gallery.bean;
  */
 public class BaseRecyclerBean {
 
-	/** 标记是否为标题行 */
-	boolean isTitleLine;
+    /** 标记是否为标题行 */
+    boolean isTitleLine;
 
-	public boolean isTitleLine() {
-		return isTitleLine;
-	}
+    public boolean isTitleLine() {
+        return isTitleLine;
+    }
 
-	public void setTitleLine(boolean titleLine) {
-		isTitleLine = titleLine;
-	}
+    public void setTitleLine(boolean titleLine) {
+        isTitleLine = titleLine;
+    }
 }

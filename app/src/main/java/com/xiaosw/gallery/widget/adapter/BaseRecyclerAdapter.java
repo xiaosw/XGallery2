@@ -14,10 +14,10 @@ import java.util.ArrayList;
  */
 public interface BaseRecyclerAdapter<T> {
 
-	public void setOnItemClickListener(OnItemClickListener onItemClickListener);
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener);
 
-	public void setOnItemLongClickListener(OnItemLongClickListener itemLongClickListener);
+    public void setOnItemLongClickListener(OnItemLongClickListener itemLongClickListener);
 
-	public ArrayList<T> getData();
+    public ArrayList<T> getData();
 
 }

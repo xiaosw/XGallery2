@@ -33,31 +33,31 @@ import android.view.View;
  * @Author xiaoshiwang <xiaoshiwang@rytong.com>
  */
 public class ViewRecyler<T extends View> {
-	
-	private ArrayList<WeakReference<T>> recyler;
-	
-	public ViewRecyler() {
-		recyler = new ArrayList<WeakReference<T>>();
-	}
-	
-	public ViewRecyler(int capacity) {
-		recyler = new ArrayList<WeakReference<T>>(capacity);
-	}
-	
-	/**
-	 * 将视图添加到复用器中，以便下次使用
-	 * @param view
-	 */
-	public void add(T view) {
-		recyler.add(new WeakReference<T>(view));
-	}
-	
-	/**
-	 * 将复用器中的闲置View取出
-	 * @return
-	 */
-	public T pop() {
-		return recyler.isEmpty() ? null : recyler.remove(0).get();
-	}
-	
+
+    private ArrayList<WeakReference<T>> recyler;
+
+    public ViewRecyler() {
+        recyler = new ArrayList<WeakReference<T>>();
+    }
+
+    public ViewRecyler(int capacity) {
+        recyler = new ArrayList<WeakReference<T>>(capacity);
+    }
+
+    /**
+     * 将视图添加到复用器中，以便下次使用
+     * @param view
+     */
+    public void add(T view) {
+        recyler.add(new WeakReference<T>(view));
+    }
+
+    /**
+     * 将复用器中的闲置View取出
+     * @return
+     */
+    public T pop() {
+        return recyler.isEmpty() ? null : recyler.remove(0).get();
+    }
+
 }

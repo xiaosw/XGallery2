@@ -10,5 +10,5 @@ import android.support.v7.app.AppCompatActivity;
  * @Date 2016-09-09 10:10:40
  */
 public abstract class BaseActivity extends AppCompatActivity {
-	private final String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
 }
