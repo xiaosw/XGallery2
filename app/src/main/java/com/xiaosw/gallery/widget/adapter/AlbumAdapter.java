@@ -59,7 +59,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.DateLineRecy
             throw new IllegalArgumentException("RecyclerView must instaceof BaseRecyclerView!!!");
         }
         mRecyclerView = (BaseRecyclerView) parent;
-        mRecyclerView.updateItemSize();
+        mRecyclerView.handleNumColumns();
         return new DateLineRecyclerHolder(View.inflate(mContext, R.layout.item_album, null));
     }
 

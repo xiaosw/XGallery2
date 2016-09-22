@@ -73,13 +73,13 @@ public abstract class BaseRecyclerView extends RecyclerView implements OnItemCli
         if (layout instanceof LinearLayoutManager) {
             this.mLayoutManager = (LinearLayoutManager) layout;
         }
-        updateItemSize(getResources().getConfiguration());
+        handleNumColumns(getResources().getConfiguration());
     }
 
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        updateItemSize(newConfig);
+        handleNumColumns(newConfig);
     }
 
     @Override
@@ -108,18 +108,23 @@ public abstract class BaseRecyclerView extends RecyclerView implements OnItemCli
         }
     }
 
-//    @Override
-//    protected void onMeasure(int widthSpec, int heightSpec) {
-////        super.onMeasure(widthSpec, heightSpec);
-//        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthSpec),
-//            getDefaultSize(getSuggestedMinimumHeight(), heightSpec));
-//    }
+    @Override
+    protected void onMeasure(int widthSpec, int heightSpec) {
+        super.onMeasure(widthSpec, heightSpec);
+        int width = View.MeasureSpec.getSize(widthSpec);
+        int height = View.MeasureSpec.getSize(heightSpec);
+        LayoutManager layoutManager = getLayoutManager();
+        if (layoutManager instanceof GridLayoutManager) {
+            updateItemSize((GridLayoutManager) layoutManager, getSpanCount(), width, height);
+        }
 
-    public void updateItemSize() {
-        updateItemSize(getResources().getConfiguration());
     }
 
-    private void updateItemSize(Configuration configuration) {
+    public void handleNumColumns() {
+        handleNumColumns(getResources().getConfiguration());
+    }
+
+    private void handleNumColumns(Configuration configuration) {
         LayoutManager layoutManager = getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
             GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
@@ -132,14 +137,25 @@ public abstract class BaseRecyclerView extends RecyclerView implements OnItemCli
             if (getSpanCount() != numColums) {
                 gridLayoutManager.setSpanCount(numColums);
             }
+            updateItemSize(gridLayoutManager, numColums, getWidth(), getHeight());
+        }
+    }
 
-            int recyclerViewDirection = gridLayoutManager.getOrientation();
-            if (recyclerViewDirection == GridLayoutManager.HORIZONTAL) {
-                mItemSize.height = (int) (Math.ceil(getHeight() / (double) numColums));
-                mItemSize.width = mItemSize.height;
-            } else if (recyclerViewDirection == GridLayoutManager.VERTICAL) {
-                mItemSize.width = (int) (Math.ceil(getWidth() / (double) numColums));
-                mItemSize.height = mItemSize.width;
+    private void updateItemSize(GridLayoutManager gridLayoutManager, double numColums, int width, int height) {
+        int recyclerViewDirection = gridLayoutManager.getOrientation();
+        int size = 0;
+        if (recyclerViewDirection == GridLayoutManager.HORIZONTAL) {
+            size = (int) (Math.ceil(height / numColums));
+        } else if (recyclerViewDirection == GridLayoutManager.VERTICAL) {
+            size = (int) (Math.ceil(width / numColums));
+        }
+        if (mItemSize.width != size
+            || mItemSize.height != size) {
+            mItemSize.width = size;
+            mItemSize.height = size;
+            Adapter adapter = getAdapter();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
             }
         }
     }
