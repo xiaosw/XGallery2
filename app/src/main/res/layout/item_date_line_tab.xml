@@ -8,6 +8,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <CheckBox
+        android:id="@+id/cb_select_state"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:button="@null"
+        android:enabled="false"
+        android:background="@mipmap/quantum_ic_check_circle_googblue_24"/>
+
     <ImageView
         android:id="@+id/iv_video_tag"
         android:layout_width="18dp"

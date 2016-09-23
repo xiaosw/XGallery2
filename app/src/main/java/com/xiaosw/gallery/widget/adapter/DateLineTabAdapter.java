@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
+import com.nineoldandroids.view.ViewHelper;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.config.AppConfig;
@@ -69,6 +71,15 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
     public void onBindViewHolder(DateLineTabAdapter.DateLineRecyclerHolder holder, int position) {
         MediaItem mediaItem = mMediaItems.get(position);
         holder.iv_video_tag.setVisibility(View.GONE);
+        if (mediaItem.getState() == MediaItem.SelectState.CHECKED) {
+            holder.cb_select_state.setVisibility(View.VISIBLE);
+            ViewHelper.setPivotX(holder.iv_image, mRecyclerView.getItemWidth() / 2);
+            ViewHelper.setPivotY(holder.iv_image, mRecyclerView.getItemWidth() / 2);
+            ViewHelper.setScaleX(holder.iv_image, 0.8f);
+            ViewHelper.setScaleY(holder.iv_image, 0.8f);
+        } else {
+            holder.cb_select_state.setVisibility(View.GONE);
+        }
         if (mediaItem.isTitleLine()) {
             holder.getItemView().setLayoutParams(mTitleViewParams);
             holder.iv_image.setImageDrawable(null);
@@ -135,6 +146,9 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
 
         @Bind(R.id.iv_video_tag)
         ImageView iv_video_tag;
+
+        @Bind(R.id.cb_select_state)
+        CheckBox cb_select_state;
         public DateLineRecyclerHolder(View itemView) {
             super(itemView);
             this.mItemView = itemView;

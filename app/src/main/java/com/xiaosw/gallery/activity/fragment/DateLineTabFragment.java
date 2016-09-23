@@ -104,7 +104,7 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
 
     @Override
     public void onItemLongClick(View view, int position) {
-
+        mAdapter.notifyItemChanged(position);
     }
 
     @Override
