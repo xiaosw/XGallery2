@@ -22,6 +22,7 @@
     <!-- tips -->
     <string name="str_tips_auth_permission_error">Permission error</string>
     <string name="str_tips_auth_permission_error_read_storage">App not authorized. Please grant access at \ "Settings > Other Settings > Applications Manager > Photo > Permissions > Storage space \". Otherwise the program can not run properly!</string>
+    <string name="str_tips_please_select">Please select</string>
 
     <!-- media fodler -->
     <string name="str_folder_name_camera">Camera</string>

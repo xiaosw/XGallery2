@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,21 +45,18 @@ public class AlbumFragment extends ContainerHeaderFragment<MediaItem> implements
     private AlbumAdapter mAlbumAdapter;
     private MainActivity mMainActivity;
     private String mBucketeId;
-    private ArrayList<MediaItem> mData;
+    private ArrayList<MediaItem> mMediaItems;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mMainActivity = (MainActivity) mActivity;
         mBucketeId = getArguments().getString(PhotoPageFragment.KEY_BUCKET_ID);
-        mData = new ArrayList<MediaItem>();
-        filterData();
+        mMediaItems = GlobalDataStorage.INSTANCE.getTargetMediaItems();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+    View onCreateRootView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_album, null);
         ButterKnife.bind(this, mRootView);
         setTitle(getArguments().getString(KEY_TITLE));
@@ -75,23 +71,9 @@ public class AlbumFragment extends ContainerHeaderFragment<MediaItem> implements
         mSuperRecyclervView.setOnItemLongClickListener(this);
         mSuperRecyclervView.addItemDecoration(new DividerGridItemDecoration(getContext()));
         mSuperRecyclervView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
-        mAlbumAdapter = new AlbumAdapter(getContext(), mData);
+        mAlbumAdapter = new AlbumAdapter(getContext(), mMediaItems);
         mSuperRecyclervView.setAdapter(mAlbumAdapter);
         return mRootView;
-    }
-
-    private ArrayList<MediaItem> filterData() {
-        ArrayList<MediaItem> mediaItems = GlobalDataStorage.INSTANCE.getSrcMediaItems();
-        if (!TextUtils.isEmpty(mBucketeId)) {
-            for (MediaItem mediaItem : mediaItems) {
-                if (mBucketeId.equals(mediaItem.getBucketId())) {
-                    mData.add(mediaItem);
-                }
-            }
-        } else {
-            mData.addAll(mediaItems);
-        }
-        return mData;
     }
 
     @Override

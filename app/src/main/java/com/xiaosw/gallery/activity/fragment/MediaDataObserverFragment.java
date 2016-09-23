@@ -17,16 +17,18 @@ import java.util.ArrayList;
  * @Author xiaosw<xiaoshiwang@putao.com>
  * @Date 2016-09-09 11:11:51
  */
-public class MediaDataObserverFragment<T> extends BaseFragment implements GlobalDataStorage.MediaDataChangeObserver<T> {
+public abstract class MediaDataObserverFragment<T> extends BaseFragment implements GlobalDataStorage.MediaDataChangeObserver<T> {
 
     boolean needRefresh;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         GlobalDataStorage.INSTANCE.registerMediaDataObserver(this);
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return onCreateRootView(inflater, container, savedInstanceState);
     }
+
+    abstract View onCreateRootView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
 
     @Override
     public void onDestroyView() {

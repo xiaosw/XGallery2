@@ -79,7 +79,6 @@ public class MediaCursorHelper {
                     FILTER_ALL_PHOTO_ARGS,
                     null);
                 if (null != videoCursor) {
-                    LogUtil.e("videoCursor.getCount = " + videoCursor.getCount());
                     videoCursor.moveToPosition(-1);
                     while (videoCursor.moveToNext()) {
                         temp.add(getMediaItemByCursor(videoCursor));
@@ -152,12 +151,11 @@ public class MediaCursorHelper {
     private static String getNativeFolderName(Context context, String folderName) {
         if ("Camera".equals(folderName)) {
             return context.getString(R.string.str_folder_name_camera);
-        } else if ("Video".equals(folderName)) {
+        } else if ("Video".equalsIgnoreCase(folderName)) {
             return context.getString(R.string.str_folder_name_video);
-        } else if ("Screenshots".equals(folderName)) {
+        } else if ("Screenshots".equalsIgnoreCase(folderName)) {
             return context.getString(R.string.str_folder_name_screenshots);
-        } else if ("Download".equals(folderName)
-                || "download".equals(folderName)) {
+        } else if ("Download".equalsIgnoreCase(folderName)) {
             return context.getString(R.string.str_folder_name_download);
         }
 

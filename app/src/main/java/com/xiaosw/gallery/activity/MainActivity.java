@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initMain();
                 } else {
-                    PTToast.makeText(this, android.R.string.selectTextMode, Toast.LENGTH_SHORT);
+                    PTToast.show(this, android.R.string.selectTextMode, Toast.LENGTH_SHORT);
                     finish();
                 }
                 break;
@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
                 MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.ImageColumns.BUCKET_ID,
                 "COUNT (".concat(MediaStore.Images.ImageColumns._ID).concat(") as totalSize ")},
-            "1 == 1 ) GROUP BY ( ".concat(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME),
+            "1 == 1 ) GROUP BY ( ".concat(MediaStore.Images.ImageColumns.BUCKET_ID),
             null,
             MediaStore.Images.ImageColumns.DATE_TAKEN.concat(" DESC"));
         MediaCursorHelper.parseFolderCursor(this, fodlerCursor);

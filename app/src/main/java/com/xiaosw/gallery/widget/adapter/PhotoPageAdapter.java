@@ -13,7 +13,6 @@ import com.bumptech.glide.RequestManager;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.config.AppConfig;
-import com.xiaosw.gallery.util.GlobalDataStorage;
 import com.xiaosw.gallery.widget.helper.ViewRecyler;
 
 import java.util.ArrayList;
@@ -55,7 +54,6 @@ public class PhotoPageAdapter extends PagerAdapter {
         if (convertView == null) {
             convertView = (ImageView) View.inflate(mContext, R.layout.view_image, null);
         }
-        convertView.setImageDrawable(null);
         MediaItem mediaItem = mMediaItems.get(position);
         String filePath = mediaItem.getData();
         if (!TextUtils.isEmpty(filePath)) {
@@ -71,7 +69,17 @@ public class PhotoPageAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mMediaItems.get(position).getCreateDate();
+        if (position >= mMediaItems.size()) {
+            return null;
+        }
+        return  mMediaItems.get(position).getCreateDate();
+    }
+
+    public MediaItem getObjectByPosition(int position) {
+        if (position >= mMediaItems.size()) {
+            return null;
+        }
+        return mMediaItems.get(position);
     }
 
     @Override
@@ -79,9 +87,16 @@ public class PhotoPageAdapter extends PagerAdapter {
         if (object instanceof ImageView) {
             ImageView imageView = (ImageView) object;
             imageView.setImageDrawable(null);
+            imageView.setImageBitmap(null);
             container.removeView(imageView);
             mViewRecyler.add(imageView);
         }
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+//        return super.getItemPosition(object);
+        return POSITION_NONE;
     }
 
 }

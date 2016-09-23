@@ -59,10 +59,8 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+    View onCreateRootView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_date_line_page, null);
         ButterKnife.bind(this, mRootView);
         initRecyclerView();

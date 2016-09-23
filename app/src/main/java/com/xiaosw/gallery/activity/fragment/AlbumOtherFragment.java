@@ -43,10 +43,8 @@ public class AlbumOtherFragment extends ContainerHeaderFragment<MediaItem> {
         initOtherFolders();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+    View onCreateRootView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_album_other, null);
         ButterKnife.bind(this, mRootView);
         setTitle(R.string.str_folder_name_other);

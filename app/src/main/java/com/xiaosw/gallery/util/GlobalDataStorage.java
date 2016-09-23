@@ -1,6 +1,6 @@
 package com.xiaosw.gallery.util;
 
-import android.content.Context;
+import android.text.TextUtils;
 
 import com.xiaosw.gallery.GalleryApplication;
 import com.xiaosw.gallery.R;
@@ -29,6 +29,8 @@ public enum  GlobalDataStorage {
     private ArrayList<MediaItem> mSrcMediaItems = new ArrayList<>();
     /** 处理过后的数据库数据 size >= {@link #mSrcMediaItems} */
     private ArrayList<MediaItem> mHandleMediaItems = new ArrayList<>();
+    /** 待操作数据 size <= {@link #mSrcMediaItems}, 如不同目录数据 */
+    private ArrayList<MediaItem> mTargetMediaItems = new ArrayList<>();
     /** 数据监听 */
     private HashSet<MediaDataChangeObserver> mMediaDataObserver = new HashSet<MediaDataChangeObserver>();
 
@@ -50,6 +52,7 @@ public enum  GlobalDataStorage {
         }
         mSrcMediaItems.clear();
         mSrcMediaItems.addAll(newMediaItems);
+        LogUtil.e("mSrcMediaItems.size =  " + mSrcMediaItems.size());
         handleBreakLine(mSrcMediaItems, Math.max(1, numColumns));
     }
 
@@ -78,6 +81,7 @@ public enum  GlobalDataStorage {
      * @param numColumns 列数
      */
     private void handleBreakLine(ArrayList<MediaItem> mediaItems, int numColumns) {
+        filterTargetMediaItemsBucketId(mLastFilterBucketId);
         MediaItem lastMediaItem = null;
         if (mediaItems == null) {
             mediaItems = new ArrayList<>();
@@ -133,10 +137,29 @@ public enum  GlobalDataStorage {
         }
     }
 
+    private String mLastFilterBucketId;
+    public ArrayList<MediaItem> filterTargetMediaItemsBucketId(String bucketId) {
+        mTargetMediaItems.clear();
+        if (!TextUtils.isEmpty(bucketId)) {
+            for (MediaItem mediaItem : mSrcMediaItems) {
+                if (bucketId.equals(mediaItem.getBucketId())) {
+                    mTargetMediaItems.add(mediaItem);
+                }
+            }
+        } else {
+            mTargetMediaItems.addAll(mSrcMediaItems);
+        }
+        mLastFilterBucketId = bucketId;
+        return mTargetMediaItems;
+    }
+
+    public ArrayList<MediaItem> getTargetMediaItems() {
+        return mTargetMediaItems;
+    }
+
     public interface MediaDataChangeObserver<T> {
         public void notifyChange(ArrayList<T> srcData, ArrayList<T> handleData);
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     // 目录信息

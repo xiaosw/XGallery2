@@ -207,6 +207,6 @@
 //
 //    @Override
 //    void doFunctionOperation() {
-//        PTToast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT);
+//        PTToast.show(getContext(), "Edit", Toast.LENGTH_SHORT);
 //    }
 //}

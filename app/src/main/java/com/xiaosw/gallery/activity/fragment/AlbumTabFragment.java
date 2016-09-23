@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaFolder;
+import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
 import com.xiaosw.gallery.util.LogUtil;
+import com.xiaosw.gallery.util.PTToast;
 import com.xiaosw.gallery.viewer.SupportGridView;
 import com.xiaosw.gallery.widget.adapter.AlbumFolderAdapter;
 
@@ -45,16 +48,13 @@ public class AlbumTabFragment extends MediaDataObserverFragment<MediaFolder> imp
         mMediaFolders = new ArrayList<>();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+    View onCreateRootView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_album_page, null);
         ButterKnife.bind(this, mRootView);
         mGridView.setOnItemClickListener(this);
         ArrayList<MediaFolder> mediaFolders = GlobalDataStorage.INSTANCE.getMediaFolders();
         initMediaFolders(mediaFolders);
-        LogUtil.e("mainMediaFolders-----------> " + mMediaFolders.size() + ", mediaFolders = " + mediaFolders.size());
         mAlbumFolderAdapter = new AlbumFolderAdapter(getContext(), mMediaFolders, mGridView);
         mGridView.setAdapter(mAlbumFolderAdapter);
         return mRootView;
@@ -88,11 +88,11 @@ public class AlbumTabFragment extends MediaDataObserverFragment<MediaFolder> imp
         if (position == mediaFolders.size() - 1) {
             fragment = new AlbumOtherFragment();
         } else {
-//            fragment = new PhotoPageFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(PhotoPageFragment.KEY_CURRENT_INDEX, 0);
-//            args.putString(PhotoPageFragment.KEY_BUCKET_ID, mediaFolder.getBucketId());
-//            fragment.setArguments(args);
+            ArrayList<MediaItem> mediaItems = GlobalDataStorage.INSTANCE.filterTargetMediaItemsBucketId(mediaFolder.getBucketId());
+            if (mediaItems.size() < 1) {
+                PTToast.show(getContext(), "null", Toast.LENGTH_SHORT);
+                return;
+            }
             fragment = new AlbumFragment();
             Bundle args = new Bundle();
             args.putString(PhotoPageFragment.KEY_BUCKET_ID, mediaFolder.getBucketId());

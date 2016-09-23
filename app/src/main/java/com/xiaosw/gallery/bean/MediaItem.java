@@ -143,6 +143,26 @@ public class MediaItem extends BaseRecyclerBean {
         this.state = state;
     }
 
+    @Override
+    public String toString() {
+        return "MediaItem{" +
+            "id=" + id +
+            ", data='" + data + '\'' +
+            ", displayName='" + displayName + '\'' +
+            ", mimeType='" + mimeType + '\'' +
+            ", title='" + title + '\'' +
+            ", dateTaken=" + dateTaken +
+            ", bucketId='" + bucketId + '\'' +
+            ", bucketDisplayName='" + bucketDisplayName + '\'' +
+            ", needDrawYear=" + needDrawYear +
+            ", createDate='" + createDate + '\'' +
+            ", year='" + year + '\'' +
+            ", monthAndDay='" + monthAndDay + '\'' +
+            ", titlePosition=" + titlePosition +
+            ", state=" + state +
+            '}';
+    }
+
     public enum SelectState {
         DISABLE, // 禁用状态，不可见
         UNCHECKED, // 未选中状态，可见

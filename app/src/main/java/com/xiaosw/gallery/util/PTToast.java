@@ -26,9 +26,9 @@ public class PTToast {
      *
      * @throws Resources.NotFoundException if the resource can't be found.
      */
-    public static void makeText(Context context, int resId, int duration)
+    public static void show(Context context, int resId, int duration)
             throws Resources.NotFoundException {
-        makeText(context, context.getResources().getText(resId), duration);
+        show(context, context.getResources().getText(resId), duration);
     }
 
 
@@ -42,7 +42,7 @@ public class PTToast {
      *                 {@link Toast#LENGTH_LONG}
      *
      */
-    public static void makeText(Context context, CharSequence text, int duration) {
+    public static void show(Context context, CharSequence text, int duration) {
         if (mToast != null) {
             mToast.cancel();
         }
