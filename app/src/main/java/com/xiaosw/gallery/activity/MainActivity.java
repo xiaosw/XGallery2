@@ -28,6 +28,11 @@ import java.util.Random;
 
 import butterknife.ButterKnife;
 
+/**
+ *
+ * 主界面
+ * 
+ */
 public class MainActivity extends BaseActivity implements MPermissionCompat.OnRequstPermissionListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     /** 请求存储权限 */
