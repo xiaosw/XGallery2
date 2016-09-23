@@ -15,7 +15,6 @@ import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaFolder;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
-import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.util.PTToast;
 import com.xiaosw.gallery.viewer.SupportGridView;
 import com.xiaosw.gallery.widget.adapter.AlbumFolderAdapter;
@@ -72,15 +71,6 @@ public class AlbumTabFragment extends MediaDataObserverFragment<MediaFolder> imp
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (needRefresh) {
-            mAlbumFolderAdapter.notifyDataSetChanged();
-            needRefresh = false;
-        }
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         List<MediaFolder> mediaFolders = mAlbumFolderAdapter.getData();
         MediaFolder mediaFolder = mediaFolders.get(position);
@@ -103,14 +93,12 @@ public class AlbumTabFragment extends MediaDataObserverFragment<MediaFolder> imp
     }
 
     @Override
-    public void notifyChange(ArrayList<MediaFolder> srcData, ArrayList<MediaFolder> handleData) {
-        LogUtil.e(TAG, "notifyChange----------> isVisible = " + isVisible());
+    void updateDateNeeded() {
         initMediaFolders(GlobalDataStorage.INSTANCE.getMediaFolders());
-        if (isVisible()) {
-            mAlbumFolderAdapter.notifyDataSetChanged();
-        } else {
-            needRefresh = true;
-        }
+    }
 
+    @Override
+    public void refresh() {
+        mAlbumFolderAdapter.notifyDataSetChanged();
     }
 }

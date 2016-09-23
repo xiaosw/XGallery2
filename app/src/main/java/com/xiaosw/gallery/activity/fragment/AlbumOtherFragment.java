@@ -54,6 +54,7 @@ public class AlbumOtherFragment extends ContainerHeaderFragment<MediaItem> {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MediaFolder mediaFolder = mMediaFolders.get(position);
+                GlobalDataStorage.INSTANCE.filterTargetMediaItemsBucketId(mediaFolder.getBucketId());
                 Fragment fragment = new AlbumFragment();
                 Bundle args = new Bundle();
                 args.putString(PhotoPageFragment.KEY_BUCKET_ID, mediaFolder.getBucketId());
@@ -66,14 +67,18 @@ public class AlbumOtherFragment extends ContainerHeaderFragment<MediaItem> {
     }
 
     @Override
-    public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
-        initOtherFolders();
-        if (isVisible()) {
-            mAlbumFolderOtherAdapter.notifyDataSetChanged();
-        } else {
-            needRefresh = true;
-        }
+    int getRealMediaItemSize() {
+        return mMediaFolders.size();
+    }
 
+    @Override
+    void updateDateNeeded() {
+        initOtherFolders();
+    }
+
+    @Override
+    public void refresh() {
+        mAlbumFolderOtherAdapter.notifyDataSetChanged();
     }
 
     private ArrayList<MediaFolder> initOtherFolders() {

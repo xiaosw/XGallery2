@@ -17,7 +17,6 @@ import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.activity.MainActivity;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
-import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.viewer.DateLineRecyclerView;
 import com.xiaosw.gallery.viewer.divider.DividerGridItemDecoration;
 import com.xiaosw.gallery.widget.adapter.DateLineTabAdapter;
@@ -25,7 +24,6 @@ import com.xiaosw.gallery.widget.listener.OnItemClickListener;
 import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,15 +65,6 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
         return mRootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (needRefresh) {
-            mAdapter.notifyDataSetChanged();
-            needRefresh = false;
-        }
-    }
-
     private void initRecyclerView() {
         mAdapter = new DateLineTabAdapter(getContext());
         // 设置布局管理器
@@ -104,6 +93,7 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
             mActivity.finish();
             return;
         }
+        GlobalDataStorage.INSTANCE.filterTargetMediaItemsBucketId(null);
         int realPosition = GlobalDataStorage.INSTANCE.getRealPositionByMediaItem(mediaItem);
         PhotoPageFragment photoFragment = new PhotoPageFragment();
         Bundle args = new Bundle();
@@ -118,14 +108,12 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
     }
 
     @Override
-    public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
-        LogUtil.e(TAG, "notifyChange----------> isVisible = " + isVisible());
-        mImageView.setVisibility(srcData.size() > 0 ? View.GONE : View.VISIBLE);
-        if (isVisible()) {
-            mAdapter.notifyDataSetChanged();
-        } else {
-            needRefresh = true;
-        }
+    void updateDateNeeded() {
+        mImageView.setVisibility(mAdapter.getItemCount() > 0 ? View.GONE : View.VISIBLE);
+    }
 
+    @Override
+    public void refresh() {
+        mAdapter.notifyDataSetChanged();
     }
 }

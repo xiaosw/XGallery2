@@ -158,7 +158,18 @@ public enum  GlobalDataStorage {
     }
 
     public interface MediaDataChangeObserver<T> {
+
+        /**
+         * 数据发生改变
+         * @param srcData
+         * @param handleData
+         */
         public void notifyChange(ArrayList<T> srcData, ArrayList<T> handleData);
+
+        /**
+         * Call Adapter#notifyDataSetChanged
+         */
+        public void refresh();
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -24,7 +24,6 @@ import com.xiaosw.gallery.widget.listener.OnItemClickListener;
 import com.xiaosw.gallery.widget.listener.OnItemLongClickListener;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +44,6 @@ public class AlbumFragment extends ContainerHeaderFragment<MediaItem> implements
     private AlbumAdapter mAlbumAdapter;
     private MainActivity mMainActivity;
     private String mBucketeId;
-    private ArrayList<MediaItem> mMediaItems;
 
     @Override
     public void onAttach(Context context) {
@@ -77,8 +75,17 @@ public class AlbumFragment extends ContainerHeaderFragment<MediaItem> implements
     }
 
     @Override
-    public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
-        super.notifyChange(srcData, handleData);
+    int getRealMediaItemSize() {
+        return mMediaItems.size();
+    }
+
+    @Override
+    void updateDateNeeded() {
+        mMediaItems = GlobalDataStorage.INSTANCE.filterTargetMediaItemsBucketId(mBucketeId);
+    }
+
+    @Override
+    public void refresh() {
         mAlbumAdapter.notifyDataSetChanged();
     }
 

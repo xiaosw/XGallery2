@@ -126,9 +126,17 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
     }
 
     @Override
-    public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
-        super.notifyChange(srcData, handleData);
+    int getRealMediaItemSize() {
+        return mMediaItems.size();
+    }
+
+    @Override
+    void updateDateNeeded() {
         mMediaItems = GlobalDataStorage.INSTANCE.getTargetMediaItems();
+    }
+
+    @Override
+    public void refresh() {
         mPageAdapter.notifyDataSetChanged();
     }
 
