@@ -16,6 +16,7 @@
     <!-- 字体大小 -->
     <dimen name="text_size_main_header">13sp</dimen>
     <dimen name="text_size_header_title">18sp</dimen>
+    <dimen name="text_size_dialog_title">18sp</dimen>
 
 
     <!-- 内边距 -->
@@ -27,13 +28,12 @@
     <dimen name="horizontal_spacing_album">40dp</dimen>
     <dimen name="vertical_spacing_album">30dp</dimen>
 
-    <!-- 栅格行列 -->
-    <!-- 时间轴 -->
-    <integer name="num_coloum_date_line_land">6</integer>
-    <integer name="num_coloum_date_line_port">5</integer>
+    <!-- Dialog -->
+    <dimen name="dialog_radius">10dp</dimen>
+    <dimen name="dialog_min_width">504dp</dimen>
+    <dimen name="dialog_title_height">60dp</dimen>
+    <dimen name="dialog_button_height">60dp</dimen>
 
-    <!-- 文件夹 -->
-    <integer name="num_coloum_album_land">4</integer>
-    <integer name="num_coloum_album_port">3</integer>
-
+    <!-- Button -->
+    <dimen name="button_radius">26dp</dimen>
 </resources>

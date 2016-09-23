@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 栅格行列 -->
+    <!-- 时间轴 -->
+    <integer name="num_coloum_date_line_land">6</integer>
+    <integer name="num_coloum_date_line_port">5</integer>
+
+    <!-- 文件夹 -->
+    <integer name="num_coloum_album_land">4</integer>
+    <integer name="num_coloum_album_port">3</integer>
+
+    <!-- 相册预览 -->
     <integer name="recycler_view_port_num_columns">5</integer>
     <integer name="recycler_view_land_num_columns">6</integer>
 

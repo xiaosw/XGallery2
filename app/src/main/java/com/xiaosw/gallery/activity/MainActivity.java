@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.View;
 import android.widget.Toast;
 
 import com.xiaosw.gallery.R;
@@ -18,6 +19,8 @@ import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.util.MPermissionCompat;
 import com.xiaosw.gallery.util.MediaCursorHelper;
 import com.xiaosw.gallery.util.PTToast;
+import com.xiaosw.gallery.widget.dialog.BaseDialog;
+import com.xiaosw.gallery.widget.dialog.TipsDialog;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -78,7 +81,22 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
     ///////////////////////////////////////////////////////////////////////////
     @Override
     public void onAlert(ArrayList<String> shouldShowRequestPermissions) {
+        TipsDialog tipsDialog = new TipsDialog(this);
+        tipsDialog.setTitle(R.string.str_tips_auth_permission_error);
+        tipsDialog.setContentStr(R.string.str_tips_auth_permission_error_read_storage);
+        tipsDialog.setCancelable(false);
+        tipsDialog.setOnClickOperationListener(new BaseDialog.OnClickOperationListener() {
+            @Override
+            public void onOk(View view) {
+                finish();
+            }
 
+            @Override
+            public void onCancel(View view) {
+
+            }
+        });
+        tipsDialog.show();
     }
 
     @Override

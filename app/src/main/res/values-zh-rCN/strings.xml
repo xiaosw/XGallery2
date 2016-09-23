@@ -10,6 +10,15 @@
     <!-- photo preview -->
     <string name="str_photo_perview_header_function">编辑</string>
 
+    <!-- Dialog -->
+    <string name="str_ok">确定</string>
+    <string name="str_cancel">取消</string>
+
+    <!-- tips -->
+    <string name="str_tips_auth_permission_error">授权失败</string>
+    <string name="str_tips_auth_permission_error_read_storage">应用未授权，请开启权限\"设置 > 其他设置 > 应用管理 > 相册 > 权限 > 存储空间\"，否则程序无法正常运行！</string>
+
+
     <!-- media fodler -->
     <string name="str_folder_name_camera">相机</string>
     <string name="str_folder_name_video">视频</string>
