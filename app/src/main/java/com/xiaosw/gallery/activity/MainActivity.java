@@ -19,6 +19,7 @@ import com.xiaosw.gallery.util.LogUtil;
 import com.xiaosw.gallery.util.MPermissionCompat;
 import com.xiaosw.gallery.util.MediaCursorHelper;
 import com.xiaosw.gallery.util.PTToast;
+import com.xiaosw.gallery.util.ScreenUtil;
 import com.xiaosw.gallery.widget.dialog.BaseDialog;
 import com.xiaosw.gallery.widget.dialog.TipsDialog;
 
@@ -40,12 +41,14 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
     /** 预览 */
     public static final int ACTION_TYPE_REVIEW = 2;
     private int mActionType;
+    private int mNavigationHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mNavigationHeight = ScreenUtil.getVirtualBarHeigh(this);
         MPermissionCompat.requestPermissionsCompat(this,
                 PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE,
                 new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -74,6 +77,10 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
 
     public int getActionType() {
         return mActionType;
+    }
+
+    public int getNavigationHeight() {
+        return mNavigationHeight;
     }
 
     ///////////////////////////////////////////////////////////////////////////

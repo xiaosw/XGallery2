@@ -17,6 +17,8 @@ import com.xiaosw.gallery.R;
  */
 public class BaseFragment extends Fragment {
 
+    private static final String TAG = "BaseFragment";
+
     FragmentActivity mActivity;
     View mRootView;
 

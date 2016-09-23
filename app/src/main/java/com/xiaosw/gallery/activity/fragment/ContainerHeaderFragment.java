@@ -1,6 +1,7 @@
 package com.xiaosw.gallery.activity.fragment;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiaosw.gallery.R;
@@ -21,6 +22,9 @@ public abstract class ContainerHeaderFragment<T> extends MediaDataObserverFragme
 
     @Bind(R.id.tv_title)
     TextView tv_title;
+
+    @Bind(R.id.iv_back)
+    ImageView iv_back;
 
     @Bind(R.id.tv_function)
     TextView tv_function; // 右侧功能
