@@ -47,15 +47,15 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
     /** 仿重复点击 */
     private long mLastClickTime;
 
-    public DateLineTabAdapter(Context context, DateLineRecyclerView recyclerView) {
+    public DateLineTabAdapter(Context context) {
         this.mContext = context.getApplicationContext();
-        this.mRecyclerView = recyclerView;
         this.mRequestManager = Glide.with(mContext);
         mMediaItems = GlobalDataStorage.INSTANCE.getHandleMediaItems();
     }
 
     @Override
     public DateLineTabAdapter.DateLineRecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        this.mRecyclerView = (DateLineRecyclerView) parent;
         mTitleViewParams =  new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 (int) mContext.getResources().getDimension(R.dimen.view_height_date_line_title));
@@ -68,6 +68,7 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
     @Override
     public void onBindViewHolder(DateLineTabAdapter.DateLineRecyclerHolder holder, int position) {
         MediaItem mediaItem = mMediaItems.get(position);
+        holder.iv_video_tag.setVisibility(View.GONE);
         if (mediaItem.isTitleLine()) {
             holder.getItemView().setLayoutParams(mTitleViewParams);
             holder.iv_image.setImageDrawable(null);
@@ -82,6 +83,9 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
                 holder.iv_image.getLayoutParams().width = mRecyclerView.getItemWidth();
             }
             if (!TextUtils.isEmpty(mediaItem.getData())) {
+                if (mediaItem.getMimeType().contains("video")) {
+                    holder.iv_video_tag.setVisibility(View.VISIBLE);
+                }
                 mRequestManager.load(AppConfig.GLIDE_NATIVE_PREFIX.concat(mediaItem.getData()))
                         .priority(Priority.HIGH)
                         .override(mRecyclerView.getItemWidth(), mRecyclerView.getItemWidth())
@@ -128,6 +132,9 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
         private View mItemView;
         @Bind(R.id.iv_image)
         ImageView iv_image;
+
+        @Bind(R.id.iv_video_tag)
+        ImageView iv_video_tag;
         public DateLineRecyclerHolder(View itemView) {
             super(itemView);
             this.mItemView = itemView;

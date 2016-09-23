@@ -1,9 +1,11 @@
 package com.xiaosw.gallery.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.xiaosw.gallery.GalleryApplication;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.bean.MediaFolder;
 import com.xiaosw.gallery.bean.MediaItem;
@@ -36,13 +38,13 @@ public class MediaCursorHelper {
      */
     public static final String[] IMAGE_PROJECTION = new String[] {
             MediaStore.Images.ImageColumns._ID,                    // 0
-            MediaStore.Images.ImageColumns.DATA,                // 1
-            MediaStore.Images.ImageColumns.DISPLAY_NAME,         // 2
-            MediaStore.Images.ImageColumns.MIME_TYPE,            // 3
-            MediaStore.Images.ImageColumns.TITLE,                // 4
-            MediaStore.Images.ImageColumns.DATE_TAKEN,            // 5
-            MediaStore.Images.ImageColumns.BUCKET_ID,            // 6
-            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME    // 7
+            MediaStore.Images.ImageColumns.DATA,                    // 1
+            MediaStore.Images.ImageColumns.DISPLAY_NAME,            // 2
+            MediaStore.Images.ImageColumns.MIME_TYPE,               // 3
+            MediaStore.Images.ImageColumns.TITLE,                   // 4
+            MediaStore.Images.ImageColumns.DATE_TAKEN,              // 5
+            MediaStore.Images.ImageColumns.BUCKET_ID,               // 6
+            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME      // 7
     };
 
     /** 查询图片条件 */
@@ -58,14 +60,45 @@ public class MediaCursorHelper {
      * 解析图片数据
      * @param cursor
      */
-    public static void parseImageCursor(Cursor cursor) {
-        ArrayList<MediaItem> temp = new ArrayList<MediaItem>();
+    public static void parseImageCursor(final Cursor cursor, final ContentResolver contentResolver) {
+        final ArrayList<MediaItem> temp = new ArrayList<MediaItem>();
         if (null != cursor && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 temp.add(getMediaItemByCursor(cursor));
             }
         }
-        GlobalDataStorage.INSTANCE.replaceAllMediaItems(temp);
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Cursor videoCursor = contentResolver.query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    IMAGE_PROJECTION,
+                    FILTER_ALL_PHOTO_WHERE,
+                    FILTER_ALL_PHOTO_ARGS,
+                    null);
+                if (null != videoCursor) {
+                    LogUtil.e("videoCursor.getCount = " + videoCursor.getCount());
+                    videoCursor.moveToPosition(-1);
+                    while (videoCursor.moveToNext()) {
+                        temp.add(getMediaItemByCursor(videoCursor));
+                    }
+                }
+                Collections.sort(temp, new Comparator<MediaItem>() {
+                    @Override
+                    public int compare(MediaItem lhs, MediaItem rhs) {
+                        return lhs.getDateTaken() > rhs.getDateTaken() ? -1 : (lhs.getDateTaken() == rhs.getDateTaken() ? 0 : 1);
+                    }
+                });
+                GalleryApplication.mApp.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GlobalDataStorage.INSTANCE.replaceAllMediaItems(temp);
+                    }
+                });
+            }
+        }.start();
     }
 
     private static MediaItem getMediaItemByCursor(Cursor cursor) {

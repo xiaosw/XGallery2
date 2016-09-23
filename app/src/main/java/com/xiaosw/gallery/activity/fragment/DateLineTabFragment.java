@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.activity.MainActivity;
@@ -43,6 +44,9 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
 
     @Bind(R.id.recycler_view)
     DateLineRecyclerView mRecyclerView;
+
+    @Bind(R.id.iv_not_media)
+    ImageView mImageView;
     private RecyclerView.Adapter mAdapter;
 
     private MainActivity mMainActivity;
@@ -75,7 +79,7 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
     }
 
     private void initRecyclerView() {
-        mAdapter = new DateLineTabAdapter(getContext(), mRecyclerView);
+        mAdapter = new DateLineTabAdapter(getContext());
         // 设置布局管理器
         mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext()));
         mRecyclerView.setItemAnimator(null);
@@ -118,6 +122,7 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
     @Override
     public void notifyChange(ArrayList<MediaItem> srcData, ArrayList<MediaItem> handleData) {
         LogUtil.e(TAG, "notifyChange----------> isVisible = " + isVisible());
+        mImageView.setVisibility(srcData.size() > 0 ? View.GONE : View.VISIBLE);
         if (isVisible()) {
             mAdapter.notifyDataSetChanged();
         } else {
