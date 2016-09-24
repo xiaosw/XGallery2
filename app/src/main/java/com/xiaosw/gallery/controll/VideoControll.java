@@ -1,5 +1,7 @@
 package com.xiaosw.gallery.controll;
 
+import android.content.Context;
+
 /**
  * @ClassName : {@link VideoControll}
  * @Description: 视频播放控制器
@@ -9,6 +11,8 @@ package com.xiaosw.gallery.controll;
  */
 public class VideoControll extends BaseMediaControll {
 
-
+    public VideoControll(Context context) {
+        super(context);
+    }
 
 }

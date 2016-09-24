@@ -26,8 +26,6 @@ import com.xiaosw.gallery.widget.dialog.TipsDialog;
 import java.util.ArrayList;
 import java.util.Random;
 
-import butterknife.ButterKnife;
-
 /**
  * @ClassName {@link MainActivity}
  * @Description 主界面
@@ -54,7 +52,6 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         mNavigationHeight = ScreenUtil.getVirtualBarHeigh(this);
         MPermissionCompat.requestPermissionsCompat(this,
                 PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE,

@@ -26,6 +26,10 @@ public abstract class BaseMediaControll {
     private Map<String, String> mHeaders;
     private int         mSeekWhenPrepared;  // recording the seek position while preparin
 
+    public BaseMediaControll(Context context) {
+        this.mContext = context;
+    }
+
     /**
      * Sets video path.
      *
@@ -94,6 +98,16 @@ public abstract class BaseMediaControll {
 
     public void resume() {
         openVideo();
+    }
+
+    public void toggle() {
+        if (!isNull(mMediaPlayer)) {
+            if (isPlaying()) {
+                mMediaPlayer.pause();
+            } else {
+                mMediaPlayer.start();
+            }
+        }
     }
 
     public int getDuration() {
