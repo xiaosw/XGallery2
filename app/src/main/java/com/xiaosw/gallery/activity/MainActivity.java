@@ -29,9 +29,11 @@ import java.util.Random;
 import butterknife.ButterKnife;
 
 /**
+ * @ClassName {@link MainActivity}
+ * @Description 主界面
  *
- * 主界面
- * 
+ * @Data 2016-09-23 08:08
+ * @Auth xiaosw0802@163.com
  */
 public class MainActivity extends BaseActivity implements MPermissionCompat.OnRequstPermissionListener,
         LoaderManager.LoaderCallbacks<Cursor> {
