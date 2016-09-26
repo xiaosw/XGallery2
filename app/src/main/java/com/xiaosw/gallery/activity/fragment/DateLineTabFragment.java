@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
 
     @Bind(R.id.iv_not_media)
     ImageView mImageView;
-    private RecyclerView.Adapter mAdapter;
+    private DateLineTabAdapter mAdapter;
 
     private MainActivity mMainActivity;
 
@@ -104,7 +103,6 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
 
     @Override
     public void onItemLongClick(View view, int position) {
-        mAdapter.notifyItemChanged(position);
     }
 
     @Override

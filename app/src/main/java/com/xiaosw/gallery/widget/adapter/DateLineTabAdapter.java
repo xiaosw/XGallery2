@@ -73,11 +73,9 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
         holder.iv_video_tag.setVisibility(View.GONE);
         if (mediaItem.getState() == MediaItem.SelectState.CHECKED) {
             holder.cb_select_state.setVisibility(View.VISIBLE);
-            ViewHelper.setPivotX(holder.iv_image, mRecyclerView.getItemWidth() / 2);
-            ViewHelper.setPivotY(holder.iv_image, mRecyclerView.getItemWidth() / 2);
-            ViewHelper.setScaleX(holder.iv_image, 0.8f);
-            ViewHelper.setScaleY(holder.iv_image, 0.8f);
+            onScale(holder, 0.8f);
         } else {
+            onScale(holder, 1f);
             holder.cb_select_state.setVisibility(View.GONE);
         }
         if (mediaItem.isTitleLine()) {
@@ -104,6 +102,13 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
                         .into(holder.iv_image);
             }
         }
+    }
+
+    private void onScale(DateLineRecyclerHolder holder, float scale) {
+        ViewHelper.setPivotX(holder.iv_image, mRecyclerView.getItemWidth() / 2);
+        ViewHelper.setPivotY(holder.iv_image, mRecyclerView.getItemWidth() / 2);
+        ViewHelper.setScaleX(holder.iv_image, scale);
+        ViewHelper.setScaleY(holder.iv_image, scale);
     }
 
     @Override
@@ -183,9 +188,9 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
                         mediaItem.setState(MediaItem.SelectState.CHECKED);
                     }
                     notifyItemChanged(position);
+                    return;
                 }
-                int layoutPosition = getLayoutPosition();
-                mOnItemClickListener.onItemClick(v, layoutPosition, isSelectMode);
+                mOnItemClickListener.onItemClick(v, getLayoutPosition(), isSelectMode);
             }
         }
 
@@ -199,8 +204,9 @@ public class DateLineTabAdapter extends RecyclerView.Adapter<DateLineTabAdapter.
                 for (MediaItem mediaItem : mMediaItems) {
                     mediaItem.setState(MediaItem.SelectState.UNCHECKED);
                 }
-                mMediaItems.get(getAdapterPosition()).setState(MediaItem.SelectState.CHECKED);
-                notifyItemChanged(getLayoutPosition());
+                int position = getAdapterPosition();
+                mMediaItems.get(position).setState(MediaItem.SelectState.CHECKED);
+                notifyItemChanged(position);
                 mOnItemLongClickListener.onItemLongClick(v, getLayoutPosition());
                 return true;
             }
