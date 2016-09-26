@@ -32,19 +32,25 @@ public class MediaCursorHelper {
     public static final int INDEX_DATE_TAKEN = 5;
     public static final int INDEX_BUCKET_ID = 6;
     public static final int INDEX_BUCKET_DISPLAY_NAME = 7;
+    public static final int INDEX_WIDTH = 8;
+    public static final int INDEX_HEIGHT = 9;
+    public static final int INDEX_SIZE = 10;
 
     /**
      * 图片列数
      */
     public static final String[] IMAGE_PROJECTION = new String[] {
-            MediaStore.Images.ImageColumns._ID,                    // 0
+            MediaStore.Images.ImageColumns._ID,                     // 0
             MediaStore.Images.ImageColumns.DATA,                    // 1
             MediaStore.Images.ImageColumns.DISPLAY_NAME,            // 2
             MediaStore.Images.ImageColumns.MIME_TYPE,               // 3
             MediaStore.Images.ImageColumns.TITLE,                   // 4
             MediaStore.Images.ImageColumns.DATE_TAKEN,              // 5
             MediaStore.Images.ImageColumns.BUCKET_ID,               // 6
-            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME      // 7
+            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,     // 7
+            MediaStore.Images.ImageColumns.WIDTH,                   // 8
+            MediaStore.Images.ImageColumns.HEIGHT,                  // 9
+            MediaStore.Images.ImageColumns.SIZE                     // 10
     };
 
     /** 查询图片条件 */
@@ -114,6 +120,9 @@ public class MediaCursorHelper {
         mediaItem.setMonthAndDay(CommonUtil.getMonthAndDay(dateTaken));
         mediaItem.setBucketId(cursor.getString(INDEX_BUCKET_ID));
         mediaItem.setBucketDisplayName(cursor.getString(INDEX_BUCKET_DISPLAY_NAME));
+        mediaItem.setWidth(cursor.getInt(INDEX_WIDTH));
+        mediaItem.setHeight(cursor.getInt(INDEX_HEIGHT));
+        mediaItem.setSize(cursor.getInt(INDEX_SIZE));
         return mediaItem;
     }
 

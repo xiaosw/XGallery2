@@ -1,5 +1,7 @@
 package com.xiaosw.gallery.bean;
 
+import java.io.Serializable;
+
 /**
  * @ClassName : {@link MediaItem}
  * @Description :
@@ -7,7 +9,7 @@ package com.xiaosw.gallery.bean;
  * @Author xiaosw<xiaoshiwang@putao.com>
  * @Date 2016-09-09 14:14:35
  */
-public class MediaItem extends BaseRecyclerBean {
+public class MediaItem extends BaseRecyclerBean implements Serializable {
 
     private int id = -1;
     private String data; // /storage/emulated/0/DCIM/Camera/IMG_20160909_142529408.jpg
@@ -17,6 +19,9 @@ public class MediaItem extends BaseRecyclerBean {
     private long dateTaken; // 时间
     private String bucketId; // 文件夹hash
     private String bucketDisplayName;// 文件夹
+    private int width;// 文件宽
+    private int height;// 文件高
+    private int size;// 内存大小
 
     /** 是否绘制年（如何跨年则为true） */
      private boolean needDrawYear;
@@ -93,6 +98,30 @@ public class MediaItem extends BaseRecyclerBean {
 
     public void setBucketDisplayName(String bucketDisplayName) {
         this.bucketDisplayName = bucketDisplayName;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public boolean isNeedDrawYear() {

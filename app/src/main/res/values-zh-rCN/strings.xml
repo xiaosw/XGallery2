@@ -25,4 +25,14 @@
     <string name="str_folder_name_screenshots">截屏</string>
     <string name="str_folder_name_download">下载</string>
     <string name="str_folder_name_other">其他</string>
+
+    <!-- media info -->
+    <string name="str_media_detail">详细信息</string>
+    <string name="str_media_name">&#160;&#160;&#160;&#160;文件名:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_path">&#160;&#160;&#160;&#160;文件路径:</string>
+    <string name="str_media_size">&#160;&#160;&#160;&#160;文件尺寸:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_memory_size">&#160;&#160;&#160;&#160;内存大小:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_mime_type">&#160;&#160;&#160;&#160;类型:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_date_taken">&#160;&#160;&#160;&#160;创建日期:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_buckete_display_name">&#160;&#160;&#160;&#160;所在目录:&lt;b>%1s&lt;/b></string>
 </resources>

@@ -20,6 +20,7 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.activity.MainActivity;
+import com.xiaosw.gallery.activity.MediaInfoActivity;
 import com.xiaosw.gallery.activity.MovieActivity;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
@@ -171,7 +172,7 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
                 break;
 
             case R.id.iv_info:
-
+                showInfo(mMediaItems.get(mCurrentIndex));
                 break;
 
             case R.id.iv_delete:
@@ -181,6 +182,13 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
             default:
                 // do nothing
         }
+    }
+
+    private void showInfo(MediaItem mediaItem) {
+        Intent intent = new Intent(getActivity(), MediaInfoActivity.class);
+        intent.putExtra(MediaInfoActivity.KEY_MEDIA_ITEM, mediaItem);
+        startActivity(intent);
+
     }
 
     private void handleFunctionItemByMimeType(String mimeType) {

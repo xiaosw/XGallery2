@@ -15,6 +15,7 @@ public class CommonUtil {
     public static SimpleDateFormat FORMAT_YEAR = new SimpleDateFormat(AppConfig.DATE_FRMAT_YEAR);
     public static SimpleDateFormat FORMAT_MONTH_DAY = new SimpleDateFormat(AppConfig.DATE_FRMAT_MONTH_DAY);
     public static SimpleDateFormat FORMAT_YEAR_MONTH_DAY = new SimpleDateFormat(AppConfig.DATE_FRMAT_YEAR_MONTH_DAY);
+    public static SimpleDateFormat FORMAT_YEAR_MONTH_DAY_HOUR_MINUES_SECONDS = new SimpleDateFormat(AppConfig.DATE_FRMAT_YEAR_MONTH_DAY_HOUR_MINUES_SENCONDS);
 
     public static String getYear(long date) {
         return FORMAT_YEAR.format(date);
@@ -26,6 +27,10 @@ public class CommonUtil {
 
     public static String getYearAndMonthAndDay(long date) {
         return FORMAT_YEAR_MONTH_DAY.format(date);
+    }
+
+    public static String getAllDate(long date) {
+        return FORMAT_YEAR_MONTH_DAY_HOUR_MINUES_SECONDS.format(date);
     }
 
 }

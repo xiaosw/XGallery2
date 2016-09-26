@@ -30,4 +30,15 @@
     <string name="str_folder_name_screenshots">Screenshots</string>
     <string name="str_folder_name_download">Download</string>
     <string name="str_folder_name_other">Other</string>
+
+
+    <!-- media info -->
+    <string name="str_media_detail">Detail</string>
+    <string name="str_media_name">&#160;&#160;&#160;&#160;File name:&lt;b>%ls&lt;/b></string>
+    <string name="str_media_path">&#160;&#160;&#160;&#160;File path:</string>
+    <string name="str_media_size">&#160;&#160;&#160;&#160;File size:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_memory_size">&#160;&#160;&#160;&#160;Memory size:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_mime_type">&#160;&#160;&#160;&#160;MimeType:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_date_taken">&#160;&#160;&#160;&#160;Create date:&lt;b>%1s&lt;/b></string>
+    <string name="str_media_buckete_display_name">&#160;&#160;&#160;&#160;Directory:&lt;b>%1s&lt;/b></string>
 </resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@drawable/drawable_white_radius">
+
+    <include layout="@layout/view_function_header" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_media_path"
+            android:textColor="@color/clr_black_100" />
+
+        <TextView
+            android:id="@+id/tv_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_medium"
+            android:textColor="@color/clr_black_100" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_media_name"
+        android:textColor="@color/clr_black_100"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"/>
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_media_size"
+        android:textColor="@color/clr_black_100"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"/>
+
+    <TextView
+        android:id="@+id/tv_memory_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_media_memory_size"
+        android:textColor="@color/clr_black_100"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"/>
+
+    <TextView
+        android:id="@+id/tv_dir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_media_buckete_display_name"
+        android:textColor="@color/clr_black_100"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"/>
+
+    <TextView
+        android:id="@+id/tv_mime_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_media_mime_type"
+        android:textColor="@color/clr_black_100"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"/>
+
+    <TextView
+        android:id="@+id/tv_date_taken"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_media_date_taken"
+        android:textColor="@color/clr_black_100"
+        android:layout_margin="12dp"/>
+
+
+</LinearLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xiaosw.gallery">
+          package="com.xiaosw.gallery">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".GalleryApplication"
@@ -15,76 +15,78 @@
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
+                <action android:name="android.intent.action.GET_CONTENT"/>
 
-                <category android:name="android.intent.category.OPENABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:mimeType="image/*" />
-                <data android:mimeType="video/*" />
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="video/*"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.PICK" />
+                <action android:name="android.intent.action.PICK"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:mimeType="image/*" />
-                <data android:mimeType="video/*" />
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="video/*"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:mimeType="vnd.android.cursor.dir/image" />
-                <data android:mimeType="vnd.android.cursor.dir/video" />
+                <data android:mimeType="vnd.android.cursor.dir/image"/>
+                <data android:mimeType="vnd.android.cursor.dir/video"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="com.android.camera.action.REVIEW" />
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="com.android.camera.action.REVIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:scheme="content" />
-                <data android:scheme="file" />
-                <data android:mimeType="image/bmp" />
-                <data android:mimeType="image/jpeg" />
-                <data android:mimeType="image/gif" />
-                <data android:mimeType="image/png" />
-                <data android:mimeType="image/webp" />
-                <data android:mimeType="image/x-ms-bmp" />
-                <data android:mimeType="image/vnd.wap.wbmp" />
-                <data android:mimeType="application/vnd.google.panorama360+jpg" />
+                <data android:scheme=""/>
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:scheme="content"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="image/bmp"/>
+                <data android:mimeType="image/jpeg"/>
+                <data android:mimeType="image/gif"/>
+                <data android:mimeType="image/png"/>
+                <data android:mimeType="image/webp"/>
+                <data android:mimeType="image/x-ms-bmp"/>
+                <data android:mimeType="image/vnd.wap.wbmp"/>
+                <data android:mimeType="application/vnd.google.panorama360+jpg"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.android.camera.action.REVIEW" />
+                <action android:name="com.android.camera.action.REVIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:scheme="content" />
-                <data android:scheme="file" />
-                <data android:mimeType="video/mpeg4" />
-                <data android:mimeType="video/mp4" />
-                <data android:mimeType="video/3gp" />
-                <data android:mimeType="video/3gpp" />
-                <data android:mimeType="video/3gpp2" />
-                <data android:mimeType="application/sdp" />
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:scheme="content"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="video/mpeg4"/>
+                <data android:mimeType="video/mp4"/>
+                <data android:mimeType="video/3gp"/>
+                <data android:mimeType="video/3gpp"/>
+                <data android:mimeType="video/3gpp2"/>
+                <data android:mimeType="application/sdp"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MovieActivity" >
-
+        <activity android:name=".activity.MovieActivity">
+        </activity>
+        <activity android:name=".activity.MediaInfoActivity"
+            android:theme="@style/dialog_activity">
         </activity>
     </application>
 

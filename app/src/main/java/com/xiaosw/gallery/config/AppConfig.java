@@ -1,7 +1,6 @@
 package com.xiaosw.gallery.config;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * @ClassName : {@link AppConfig}
@@ -15,6 +14,8 @@ public class AppConfig {
     /** 标记是否为调试模式 */
     public static final boolean DEBUG = true;
 
+    /** 年月日,时分秒格式 */
+    public static final String DATE_FRMAT_YEAR_MONTH_DAY_HOUR_MINUES_SENCONDS = "yyyy/MM/dd HH:mm:ss";
     /** 年月日格式 */
     public static final String DATE_FRMAT_YEAR_MONTH_DAY = "yyyy/MM/dd";
     /** 月日格式 */
