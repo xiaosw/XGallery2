@@ -5,9 +5,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceView;
 
+import com.xiaosw.gallery.GalleryApplication;
 import com.xiaosw.gallery.util.LogUtil;
 
 import java.util.Formatter;
@@ -26,8 +28,12 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
     
     private static final String TAG = "BaseMediaControll";
 
+    /** 默认更新进度间隔时间 */
+    private static final int DEFAULT_UPDATE_DURATION_GAP = 1000;
+
     MediaPlayer mMediaPlayer;
     private MediaPlayer.OnCompletionListener mOnCompletionListener;
+    private OnProgressInfoUpdateListener mOnProgressInfoUpdateListener;
     Context mContext;
     // settable by the client
     private Uri mUri;
@@ -38,11 +44,19 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
     private Formatter mFormatter;
 
     SurfaceView mSurfaceView;
+    private Handler mHandler;
+    private int mProgressUpdateGap = DEFAULT_UPDATE_DURATION_GAP;
+    private boolean resumeNeededPlay = true;
 
     public BaseMediaControll(Context context) {
         this.mContext = context;
+        init();
+    }
+
+    private void init() {
         mFormatBuilder = new StringBuilder();
         mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+        mHandler = GalleryApplication.mApp.getHandler();
         initMediaPlayer();
     }
 
@@ -54,25 +68,26 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
     }
 
     /**
-     * Sets video path.
+     * Sets video/audio path.
      *
      * @param path the path of the video.
      */
-    public void setVideoPath(String path) {
-        setVideoURI(Uri.parse(path));
+    public void setMediaPath(String path) {
+        setMediaURI(Uri.parse(path));
     }
 
     /**
-     * Sets video URI.
+     * Sets video/audio URI.
      *
      * @param uri the URI of the video.
      */
-    public void setVideoURI(Uri uri) {
-        setVideoURI(uri, null);
+    public void setMediaURI(Uri uri) {
+        setMediaURI(uri, null);
+
     }
 
     /**
-     * Sets video URI using specific headers.
+     * Sets video/audio URI using specific headers.
      *
      * @param uri     the URI of the video.
      * @param headers the headers for the URI request.
@@ -81,10 +96,9 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
      *                "android-allow-cross-domain-redirect" as the key and "0" or "1" as the value
      *                to disallow or allow cross domain redirection.
      */
-    public void setVideoURI(Uri uri, Map<String, String> headers) {
+    public void setMediaURI(Uri uri, Map<String, String> headers) {
         mUri = uri;
         mHeaders = headers;
-        mSeekWhenPrepared = 0;
         openVideo();
     }
 
@@ -106,7 +120,8 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
                 mMediaPlayer.setDataSource(mContext, mUri);
             }
             mMediaPlayer.prepare();//缓冲
-            mMediaPlayer.start();//播放
+            mHandler.removeCallbacks(mUpdateProgressTask);
+            mHandler.postDelayed(mUpdateProgressTask, mProgressUpdateGap);
             return true;
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -120,10 +135,55 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
     }
 
     public void onStart() {
-        if (null != mMediaPlayer
-                && !mMediaPlayer.isPlaying()) {
+        if (null == mMediaPlayer) {
+            return;
+        }
+        if (!mMediaPlayer.isPlaying()) {
             requestAudioFocus(mContext);
+            seekTo(mSeekWhenPrepared);
             mMediaPlayer.start();
+            mHandler.removeCallbacks(mUpdateProgressTask);
+            mHandler.postDelayed(mUpdateProgressTask, mProgressUpdateGap);
+        }
+    }
+
+    public void onResume() {
+        onStart();
+    }
+
+    public void onPause() {
+        if (isNull(mMediaPlayer)) {
+            return;
+        }
+        abandonAudioFocus(mContext);
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+        }
+        mSeekWhenPrepared = mMediaPlayer.getCurrentPosition();
+        mHandler.removeCallbacks(mUpdateProgressTask);
+    }
+
+    public void onStop() {
+        if (isNull(mMediaPlayer)) {
+            return;
+        }
+        abandonAudioFocus(mContext);
+        mMediaPlayer.stop();
+        release();
+    }
+
+    public void toggle() {
+        if (!isNull(mMediaPlayer)) {
+            if (isPlaying()) {
+                abandonAudioFocus(mContext);
+                mMediaPlayer.pause();
+                mHandler.removeCallbacks(mUpdateProgressTask);
+            } else {
+                requestAudioFocus(mContext);
+                mMediaPlayer.start();
+                mHandler.removeCallbacks(mUpdateProgressTask);
+                mHandler.postDelayed(mUpdateProgressTask, mProgressUpdateGap);
+            }
         }
     }
 
@@ -137,23 +197,8 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
             mMediaPlayer = null;
             abandonAudioFocus(mContext);
         }
-    }
-
-    public void onResume() {
-        requestAudioFocus(mContext);
-        openVideo();
-    }
-
-    public void toggle() {
-        if (!isNull(mMediaPlayer)) {
-            if (isPlaying()) {
-                abandonAudioFocus(mContext);
-                mMediaPlayer.pause();
-            } else {
-                requestAudioFocus(mContext);
-                mMediaPlayer.start();
-            }
-        }
+        mSeekWhenPrepared = 0;
+        mHandler.removeCallbacks(mUpdateProgressTask);
     }
 
     public int getDuration() {
@@ -226,21 +271,6 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
         return bool;
     }
 
-    public void onPause() {
-        abandonAudioFocus(mContext);
-        if (!isNull(mMediaPlayer)
-                && mMediaPlayer.isPlaying()) {
-            mMediaPlayer.pause();
-        }
-    }
-
-    public void onStop() {
-        abandonAudioFocus(mContext);
-        if (!isNull(mMediaPlayer)) {
-            mMediaPlayer.stop();
-        }
-    }
-
     public boolean isPlaying() {
         if (!isNull(mMediaPlayer)) {
             return mMediaPlayer.isPlaying();
@@ -250,7 +280,13 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        onStart();
+        if (!resumeNeededPlay) {
+            onPause();
+        }
+        if (null != mOnProgressInfoUpdateListener) {
+            mOnProgressInfoUpdateListener.onPrepared(mp);
+        }
     }
 
     @Override
@@ -268,6 +304,42 @@ public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListene
 
     public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener) {
        this.mOnCompletionListener = listener;
+    }
+
+    public void setOnProgressInfoUpdateListener(OnProgressInfoUpdateListener listener) {
+        this.mOnProgressInfoUpdateListener = listener;
+    }
+
+    public void setProgressUpdateGap(int durationGap){
+        if (durationGap >= 1) {
+            this.mProgressUpdateGap = durationGap;
+        }
+    }
+
+    public void setResumeNeededPlay(boolean resumeNeededPlay) {
+        this.resumeNeededPlay = resumeNeededPlay;
+    }
+
+    private Runnable mUpdateProgressTask = new Runnable() {
+        @Override
+        public void run() {
+            if (null != mOnProgressInfoUpdateListener) {
+                int totalTime = mMediaPlayer.getDuration();
+                int curentTime = mMediaPlayer.getCurrentPosition();
+                mOnProgressInfoUpdateListener.onProgressUpdate(totalTime, curentTime);
+                if (totalTime > curentTime) {
+                    mHandler.postDelayed(this, mProgressUpdateGap);
+                }
+            }
+        }
+    };
+
+    public interface OnProgressInfoUpdateListener {
+
+        public void onPrepared(MediaPlayer mp);
+
+        public void onProgressUpdate(int total, int current);
+
     }
 
 }

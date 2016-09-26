@@ -1,6 +1,8 @@
 package com.xiaosw.gallery.controll;
 
 import android.content.Context;
+import android.net.Uri;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 /**
@@ -12,9 +14,26 @@ import android.view.SurfaceView;
  */
 public class VideoControll extends BaseMediaControll {
 
-    public VideoControll(Context context, SurfaceView surfaceView) {
+    private static final String TAG = "VideoControll";
+
+    public VideoControll(Context context, final Uri uri, SurfaceView surfaceView) {
         super(context);
         mSurfaceView = surfaceView;
-    }
+        mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                setMediaURI(uri);
+            }
 
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+
+            }
+        });
+    }
 }
