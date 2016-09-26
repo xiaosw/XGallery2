@@ -45,6 +45,7 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
     @Bind(R.id.iv_not_media)
     ImageView mImageView;
     private DateLineTabAdapter mAdapter;
+    private OnSelectStateChange mOnSelectStateChange;
 
     private MainActivity mMainActivity;
 
@@ -103,6 +104,9 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
 
     @Override
     public void onItemLongClick(View view, int position) {
+        if (null != mOnSelectStateChange) {
+            mOnSelectStateChange.onSelectStateChange(mAdapter.isSelectMode());
+        }
     }
 
     @Override
@@ -113,5 +117,17 @@ public class DateLineTabFragment extends MediaDataObserverFragment<MediaItem> im
     @Override
     public void refresh() {
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void exitSelectMode() {
+        mAdapter.setSelectMode(false);
+    }
+
+    public void setOnSelectStateChange(OnSelectStateChange listner) {
+        this.mOnSelectStateChange = listner;
+    }
+
+    public interface OnSelectStateChange {
+        public void onSelectStateChange(boolean inSelectMode);
     }
 }
