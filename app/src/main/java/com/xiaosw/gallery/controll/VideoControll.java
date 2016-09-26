@@ -1,6 +1,7 @@
 package com.xiaosw.gallery.controll;
 
 import android.content.Context;
+import android.view.SurfaceView;
 
 /**
  * @ClassName : {@link VideoControll}
@@ -11,8 +12,9 @@ import android.content.Context;
  */
 public class VideoControll extends BaseMediaControll {
 
-    public VideoControll(Context context) {
+    public VideoControll(Context context, SurfaceView surfaceView) {
         super(context);
+        mSurfaceView = surfaceView;
     }
 
 }

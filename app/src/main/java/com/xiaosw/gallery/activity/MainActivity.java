@@ -45,6 +45,8 @@ public class MainActivity extends BaseActivity implements MPermissionCompat.OnRe
     public static final int ACTION_TYPE_SELECT = 1;
     /** 预览 */
     public static final int ACTION_TYPE_REVIEW = 2;
+    /** 底部导航栏高度 */
+    public static final String KEY_NAVIGATION_HEIGHT = "NAVIGATION_HEIGHT";
     private int mActionType;
     private int mNavigationHeight;
 

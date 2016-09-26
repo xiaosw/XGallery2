@@ -20,6 +20,7 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.xiaosw.gallery.R;
 import com.xiaosw.gallery.activity.MainActivity;
+import com.xiaosw.gallery.activity.MovieActivity;
 import com.xiaosw.gallery.bean.MediaItem;
 import com.xiaosw.gallery.util.GlobalDataStorage;
 import com.xiaosw.gallery.util.PTToast;
@@ -41,7 +42,7 @@ import butterknife.OnClick;
  * @Date 2016-09-09 22:22:09
  */
 public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implements ViewPager.OnPageChangeListener,
-    SupportViewPager.OnItemClickListener {
+    SupportViewPager.OnItemClickListener, PhotoPageAdapter.OnPlayListener {
 
     public static final String KEY_CURRENT_INDEX = "CURRENT_INDEX";
     public static final String KEY_BUCKET_ID = "BUCKET_ID";
@@ -51,6 +52,9 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
 
     @Bind(R.id.view_navigation_span)
     View view_navigation_span;
+
+    @Bind(R.id.iv_edit)
+    View iv_edit;
 
     @Bind(R.id.view_bottom_function)
     View view_bottom_function;
@@ -75,7 +79,8 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
     }
 
     private void initView() {
-        view_header_container.setBackgroundColor(Color.TRANSPARENT);
+//        view_header_container.setBackgroundColor(Color.TRANSPARENT);
+        view_header_container.setBackgroundResource(R.mipmap.bg_top_bar);
         iv_back.setImageResource(R.mipmap.ic_back_white);
         tv_title.setTextColor(Color.WHITE);
         tv_function.setTextColor(Color.WHITE);
@@ -86,11 +91,13 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
         mMediaItems = GlobalDataStorage.INSTANCE.getTargetMediaItems();
         // ViewPager
         mPageAdapter = new PhotoPageAdapter(getContext(), mMediaItems);
+        mPageAdapter.setOnPlayListener(this);
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setCurrentItem(mCurrentIndex);
         mViewPager.setOnItemClickListener(this);
         setTitle(mPageAdapter.getPageTitle(mCurrentIndex));
+        handleFunctionItemByMimeType(mMediaItems.get(mCurrentIndex).getMimeType());
     }
 
     @Override
@@ -103,9 +110,19 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
     }
 
     @Override
+    public void onPlay(String path, int id) {
+        Intent intent = new Intent(getActivity(), MovieActivity.class);
+        intent.putExtra(MainActivity.KEY_NAVIGATION_HEIGHT, ((MainActivity) getActivity()).getNavigationHeight());
+        intent.setData(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build());
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
     public void onPageSelected(int position) {
         mCurrentIndex = position;
         setTitle(mPageAdapter.getPageTitle(position));
+        handleFunctionItemByMimeType(mMediaItems.get(position).getMimeType());
     }
 
     @Override
@@ -163,6 +180,14 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
 
             default:
                 // do nothing
+        }
+    }
+
+    private void handleFunctionItemByMimeType(String mimeType) {
+        if (mimeType.contains("video/")) {
+            iv_edit.setVisibility(View.GONE);
+        } else {
+            iv_edit.setVisibility(View.VISIBLE);
         }
     }
 

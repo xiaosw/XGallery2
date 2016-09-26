@@ -4,7 +4,14 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
+import android.view.SurfaceView;
 
+import com.xiaosw.gallery.util.LogUtil;
+
+import java.util.Formatter;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -14,20 +21,36 @@ import java.util.Map;
  * @Date 2016-09-24 13:14
  * @Author xiaosw <xiaosw0802@163.com>
  */
-public abstract class BaseMediaControll {
+public abstract class BaseMediaControll implements MediaPlayer.OnPreparedListener, MediaPlayer.OnBufferingUpdateListener,
+    MediaPlayer.OnCompletionListener{
     
     private static final String TAG = "BaseMediaControll";
 
     MediaPlayer mMediaPlayer;
-    Callback mCallback;
+    private MediaPlayer.OnCompletionListener mOnCompletionListener;
     Context mContext;
     // settable by the client
     private Uri mUri;
     private Map<String, String> mHeaders;
     private int         mSeekWhenPrepared;  // recording the seek position while preparin
+    // 格式化显示时间
+    private StringBuilder mFormatBuilder;
+    private Formatter mFormatter;
+
+    SurfaceView mSurfaceView;
 
     public BaseMediaControll(Context context) {
         this.mContext = context;
+        mFormatBuilder = new StringBuilder();
+        mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+        initMediaPlayer();
+    }
+
+    protected void initMediaPlayer() {
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.setOnBufferingUpdateListener(this);
+        mMediaPlayer.setOnCompletionListener(this);
     }
 
     /**
@@ -65,8 +88,31 @@ public abstract class BaseMediaControll {
         openVideo();
     }
 
-    private void openVideo() {
-
+    private boolean openVideo() {
+        try {
+            if (mUri == null) {
+                // not ready for playback just yet, will try again later
+                return false;
+            }
+            requestAudioFocus(mContext);
+            mMediaPlayer.reset();//重置为初始状态
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);//设置音乐流的类型
+            if (null != mSurfaceView) {
+                mMediaPlayer.setDisplay(mSurfaceView.getHolder());//设置video影片以surfaceviewholder播放
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                mMediaPlayer.setDataSource(mContext, mUri, mHeaders);
+            } else {
+                mMediaPlayer.setDataSource(mContext, mUri);
+            }
+            mMediaPlayer.prepare();//缓冲
+            mMediaPlayer.start();//播放
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+            e.printStackTrace();
+        }
+        return false;
     }
 
     boolean isNull(Object object) {
@@ -76,10 +122,8 @@ public abstract class BaseMediaControll {
     public void onStart() {
         if (null != mMediaPlayer
                 && !mMediaPlayer.isPlaying()) {
+            requestAudioFocus(mContext);
             mMediaPlayer.start();
-            if (null != mCallback) {
-                mCallback.onStart();
-            }
         }
     }
 
@@ -91,20 +135,22 @@ public abstract class BaseMediaControll {
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
-            AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-            am.abandonAudioFocus(null);
+            abandonAudioFocus(mContext);
         }
     }
 
-    public void resume() {
+    public void onResume() {
+        requestAudioFocus(mContext);
         openVideo();
     }
 
     public void toggle() {
         if (!isNull(mMediaPlayer)) {
             if (isPlaying()) {
+                abandonAudioFocus(mContext);
                 mMediaPlayer.pause();
             } else {
+                requestAudioFocus(mContext);
                 mMediaPlayer.start();
             }
         }
@@ -134,27 +180,65 @@ public abstract class BaseMediaControll {
         }
     }
 
+    public String stringForTime(int timeMs) {
+        int totalSeconds = timeMs / 1000;
+
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours   = totalSeconds / 3600;
+
+        mFormatBuilder.setLength(0);
+        if (hours > 0) {
+            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
+        }
+    }
+
+    public static boolean requestAudioFocus(Context context) {
+        return handleAudioFocus(context, false);
+    }
+
+    public static boolean abandonAudioFocus(Context context) {
+        return handleAudioFocus(context, true);
+    }
+
+    /**@param isAbandon 值为true时为关闭背景音乐。*/
+    private static boolean handleAudioFocus(Context context, boolean isAbandon) {
+        if(context == null){
+            LogUtil.w("context is null.");
+            return false;
+        }
+        if(Build.VERSION_CODES.FROYO > Build.VERSION.SDK_INT){
+            // 2.1以下的版本不支持下面的API：requestAudioFocus和abandonAudioFocus
+            LogUtil.e("Android 2.1 and below can not stop music");
+            return false;
+        }
+        boolean bool;
+        AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        if(isAbandon){
+            int result = am.requestAudioFocus(null,AudioManager.STREAM_MUSIC ,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            bool = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+        }else{
+            int result = am.abandonAudioFocus(null);
+            bool = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+        }
+        return bool;
+    }
+
     public void onPause() {
+        abandonAudioFocus(mContext);
         if (!isNull(mMediaPlayer)
                 && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
-            if (null != mCallback) {
-                mCallback.onPause();
-            }
         }
     }
 
     public void onStop() {
+        abandonAudioFocus(mContext);
         if (!isNull(mMediaPlayer)) {
             mMediaPlayer.stop();
-            if (null != mCallback) {
-                mCallback.onStop();
-            }
         }
-    }
-
-    public MediaPlayer getMediaPlayer() {
-        return mMediaPlayer;
     }
 
     public boolean isPlaying() {
@@ -163,18 +247,27 @@ public abstract class BaseMediaControll {
         }
         return false;
     }
-    
-    public void setCallback(Callback callback) {
-        this.mCallback = callback;
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+
     }
 
-    public interface Callback {
-        
-        public void onStart();
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
 
-        public void onPause();
+    }
 
-        public void onStop();
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        abandonAudioFocus(mContext);
+        if (null != mOnCompletionListener) {
+            mOnCompletionListener.onCompletion(mp);
+        }
+    }
+
+    public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener) {
+       this.mOnCompletionListener = listener;
     }
 
 }

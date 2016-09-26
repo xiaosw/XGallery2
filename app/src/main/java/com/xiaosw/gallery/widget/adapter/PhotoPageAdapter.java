@@ -27,13 +27,14 @@ public class PhotoPageAdapter extends PagerAdapter {
 
     private Context mContext;
     private ArrayList<MediaItem> mMediaItems;
-    private ViewRecyler<ImageView> mViewRecyler;
+    private ViewRecyler<ViewGroup> mViewRecyler;
     private RequestManager mRequestManager;
+    private OnPlayListener mOnPlayListener;
 
     public PhotoPageAdapter(Context context, ArrayList<MediaItem> mediaItems) {
         this.mContext = context;
         this.mRequestManager = Glide.with(mContext);
-        mViewRecyler = new ViewRecyler<ImageView>(3);
+        mViewRecyler = new ViewRecyler<ViewGroup>(3);
         mMediaItems = mediaItems;
         Glide.with(mContext);
     }
@@ -50,21 +51,36 @@ public class PhotoPageAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        ImageView convertView = mViewRecyler.pop();
-        if (convertView == null) {
-            convertView = (ImageView) View.inflate(mContext, R.layout.view_image, null);
+        ViewGroup viewGroup = mViewRecyler.pop();
+        if (viewGroup == null) {
+            viewGroup = (ViewGroup) View.inflate(mContext, R.layout.item_photo_page, null);
         }
-        MediaItem mediaItem = mMediaItems.get(position);
+        final MediaItem mediaItem = mMediaItems.get(position);
+        View iv_play = viewGroup.getChildAt(1);
+        iv_play.setVisibility(View.GONE);
+        if (mediaItem.getMimeType().contains("video/")) {
+            iv_play.setVisibility(View.VISIBLE);
+            if (null != mOnPlayListener) {
+                iv_play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    mOnPlayListener.onPlay(mediaItem.getData(), mediaItem.getId());
+                    }
+                });
+            }
+        }
+
+        ImageView iv_photo = (ImageView) viewGroup.getChildAt(0);
         String filePath = mediaItem.getData();
         if (!TextUtils.isEmpty(filePath)) {
             mRequestManager.load(AppConfig.GLIDE_NATIVE_PREFIX.concat(mediaItem.getData()))
                     .priority(Priority.HIGH)
                     .override(container.getMeasuredWidth(), container.getMeasuredHeight())
                     .fitCenter()
-                    .into(convertView);
+                    .into(iv_photo);
         }
-        container.addView(convertView);
-        return convertView;
+        container.addView(viewGroup);
+        return viewGroup;
     }
 
     @Override
@@ -84,12 +100,13 @@ public class PhotoPageAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        if (object instanceof ImageView) {
-            ImageView imageView = (ImageView) object;
+        if (object instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) object;
+            ImageView imageView = (ImageView) viewGroup.getChildAt(0);
             imageView.setImageDrawable(null);
             imageView.setImageBitmap(null);
-            container.removeView(imageView);
-            mViewRecyler.add(imageView);
+            container.removeView(viewGroup);
+            mViewRecyler.add(viewGroup);
         }
     }
 
@@ -97,6 +114,14 @@ public class PhotoPageAdapter extends PagerAdapter {
     public int getItemPosition(Object object) {
 //        return super.getItemPosition(object);
         return POSITION_NONE;
+    }
+
+    public void setOnPlayListener(OnPlayListener listener) {
+        this.mOnPlayListener = listener;
+    }
+
+    public interface OnPlayListener {
+        public void onPlay(String path, int id);
     }
 
 }

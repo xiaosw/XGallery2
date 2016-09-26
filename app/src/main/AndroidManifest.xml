@@ -83,7 +83,9 @@
                 <data android:mimeType="application/sdp" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MovieActivity"></activity>
+        <activity android:name=".activity.MovieActivity" >
+
+        </activity>
     </application>
 
 </manifest>

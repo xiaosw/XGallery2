@@ -1,5 +1,7 @@
 package com.xiaosw.gallery.controll;
 
+import android.content.Context;
+
 /**
  * @ClassName : {@link AudioControll}
  * @Description: 音频控制器
@@ -9,6 +11,8 @@ package com.xiaosw.gallery.controll;
  */
 public class AudioControll extends BaseMediaControll {
 
-
+    public AudioControll(Context context) {
+        super(context);
+    }
 
 }
