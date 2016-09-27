@@ -164,7 +164,7 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
             case R.id.iv_share:
                 MediaItem mediaItem = mPageAdapter.getObjectByPosition(mCurrentIndex);
                 String mimeType = mediaItem.getMimeType();
-                doShare(getContentUri(mimeType, mediaItem.getId()), mimeType);
+                doShareSingle(getContentUri(mimeType, mediaItem.getId()), mimeType);
                 break;
 
             case R.id.iv_edit:
@@ -212,13 +212,27 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
         contentResolver.delete(getContentUri(mediaItem.getMimeType(), mediaItem.getId()), null, null);
     }
 
-    private void doShare(Uri uri, String mimeType) {
+    private void doShareSingle(Uri uri, String mimeType) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType(mimeType);
-        intent.setDataAndType(uri, mimeType);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(intent, getResources().getString(R.string.str_tips_please_select)));
     }
 
+    /**
+     * 分享多张照片
+     */
+    private void doShareMultiple(ArrayList<Uri> uris, String mimeType){
+        Intent intent=new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.setType(mimeType);
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+//        intent.putExtra(Intent.EXTRA_SUBJECT, "分享");
+//        intent.putExtra(Intent.EXTRA_TEXT, "你好 ");
+//        intent.putExtra(Intent.EXTRA_TITLE, "我是标题");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(Intent.createChooser(intent, getResources().getString(R.string.str_tips_please_select)));
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // 动效处理
