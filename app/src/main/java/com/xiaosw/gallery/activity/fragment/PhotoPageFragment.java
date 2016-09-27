@@ -16,6 +16,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Toast;
 
+import com.android.gallery3d.filtershow.FilterShowActivity;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.xiaosw.gallery.R;
@@ -160,23 +161,25 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
 
     @OnClick({R.id.iv_share, R.id.iv_edit, R.id.iv_info, R.id.iv_delete})
     void onFunctionClick(View view) {
+        MediaItem mediaItem = mPageAdapter.getObjectByPosition(mCurrentIndex);
         switch (view.getId()) {
             case R.id.iv_share:
-                MediaItem mediaItem = mPageAdapter.getObjectByPosition(mCurrentIndex);
                 String mimeType = mediaItem.getMimeType();
                 doShareSingle(getContentUri(mimeType, mediaItem.getId()), mimeType);
                 break;
 
             case R.id.iv_edit:
-
+                Intent intent = new Intent(getActivity(), FilterShowActivity.class);
+                intent.setData(getContentUri(mediaItem.getMimeType(), mediaItem.getId()));
+                startActivity(intent);
                 break;
 
             case R.id.iv_info:
-                showInfo(mMediaItems.get(mCurrentIndex));
+                showInfo(mediaItem);
                 break;
 
             case R.id.iv_delete:
-                doDelete(mPageAdapter.getObjectByPosition(mCurrentIndex));
+                doDelete(mediaItem);
                 break;
 
             default:

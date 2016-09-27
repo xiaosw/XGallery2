@@ -19,7 +19,7 @@
     <!-- 弹窗Activity -->
     <style name="dialog_activity" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
+        <!--<item name="android:windowCloseOnTouchOutside">false</item>-->
         <item name="android:windowNoTitle">true</item>
     </style>
 

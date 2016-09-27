@@ -114,7 +114,19 @@ public class LogUtil {
         if(printW) {
             Log.w(getTag(), msg);
         }
-    };
+    }
+
+    public static void w(String tag, String msg) {
+        if(printW) {
+            Log.w(tag, msg);
+        }
+    }
+
+    public static void w(String tag, String msg, Throwable throwable) {
+        if(printW) {
+            Log.w(tag, msg, throwable);
+        }
+    }
 
     public static void w(Throwable tr) {
         if(printW) {
