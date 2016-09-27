@@ -90,7 +90,27 @@
             android:theme="@style/dialog_activity">
         </activity>
 
-        <activity android:name="com.android.gallery3d.filtershow.FilterShowActivity"/>
+        <activity android:name="com.android.gallery3d.filtershow.FilterShowActivity"
+            android:theme="@style/Theme.FilterShow">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="action_nextgen_edit" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.android.gallery3d.filtershow.pipeline.ProcessingService"
+            android:exported="false" />
     </application>
 
 </manifest>

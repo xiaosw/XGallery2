@@ -34,6 +34,7 @@ import com.android.gallery3d.filtershow.filters.ImageFilter;
 import com.android.gallery3d.filtershow.imageshow.MasterImage;
 import com.android.gallery3d.filtershow.tools.SaveImage;
 import com.xiaosw.gallery.R;
+import com.xiaosw.gallery.util.LogUtil;
 
 import java.io.File;
 
@@ -226,6 +227,7 @@ public class ProcessingService extends Service {
     }
 
     public void onStart() {
+        LogUtil.e("onStart()===========================");
         mNeedsAlive = true;
         if (!mSaving && mFiltershowActivity != null) {
             mFiltershowActivity.updateUIAfterServiceStarted();

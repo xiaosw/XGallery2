@@ -112,7 +112,6 @@ import com.android.gallery3d.filtershow.ui.ExportDialog;
 import com.android.gallery3d.filtershow.ui.FramedTextButton;
 import com.android.photos.data.GalleryBitmapPool;
 import com.xiaosw.gallery.R;
-import com.xiaosw.gallery.util.LogUtil;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -270,7 +269,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         if (onlyUsePortrait) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        LogUtil.e("onCreate()------------------- uri = " + getIntent().getData());
+
         clearGalleryBitmapPool();
         doBindService();
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.GRAY));
@@ -483,7 +482,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     }
 
     private void processIntent() {
-
         Intent intent = getIntent();
         if (intent.getBooleanExtra(LAUNCH_FULLSCREEN, false)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -491,7 +489,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
 
         mAction = intent.getAction();
         mSelectedImageUri = intent.getData();
-        LogUtil.e("processIntent-----------> mSelectedImageUri = " + mSelectedImageUri);
         Uri loadUri = mSelectedImageUri;
         if (mOriginalImageUri != null) {
             loadUri = mOriginalImageUri;
@@ -791,11 +788,9 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
 
         @Override
         protected Boolean doInBackground(Uri... params) {
-            LogUtil.e("uri--------------------> " + params[0]);
             if (!MasterImage.getImage().loadBitmap(params[0], mBitmapSize)) {
                 return false;
             }
-
             publishProgress(ImageLoader.queryLightCycle360(MasterImage.getImage().getActivity()));
             return true;
         }
@@ -969,6 +964,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     }
 
     private Intent getDefaultShareIntent() {
+
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -1381,7 +1377,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
-                LogUtil.e("onActivityResult--------------> selectedImageUri = " + selectedImageUri);
                 startLoadBitmap(selectedImageUri);
             }
         }
@@ -1395,7 +1390,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
 //            int bucketId = GalleryUtils.getBucketId(saveDir.getPath());
 //            String albumName = LocalAlbum.getLocalizedName(getResources(), bucketId, null);
 //            showSavingProgress(albumName);
-//            mImageShow.saveImage(this, null);
+            mImageShow.saveImage(this, null);
         } else {
             done();
         }
@@ -1411,7 +1406,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     }
 
     private void extractXMPData() {
-        LogUtil.e("extractXMPData---------------> " + getIntent().getData());
         XMresults res = XmpPresets.extractXMPData(
                 getBaseContext(), mMasterImage, getIntent().getData());
         if (res == null)

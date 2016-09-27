@@ -169,9 +169,11 @@ public class PhotoPageFragment extends ContainerHeaderFragment<MediaItem> implem
                 break;
 
             case R.id.iv_edit:
-                Intent intent = new Intent(getActivity(), FilterShowActivity.class);
-                intent.setData(getContentUri(mediaItem.getMimeType(), mediaItem.getId()));
-                startActivity(intent);
+                Intent intent = new Intent(mActivity, FilterShowActivity.class);
+                intent.setDataAndType(getContentUri(mediaItem.getMimeType(), mediaItem.getId()), mediaItem.getMimeType())
+                    .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.putExtra(FilterShowActivity.LAUNCH_FULLSCREEN, true);
+                mActivity.startActivityForResult(intent, 100);
                 break;
 
             case R.id.iv_info:
