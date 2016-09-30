@@ -91,7 +91,8 @@
         </activity>
 
         <activity android:name="com.android.gallery3d.filtershow.FilterShowActivity"
-            android:theme="@style/Theme.FilterShow">
+            android:theme="@style/Theme.FilterShow"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
 
